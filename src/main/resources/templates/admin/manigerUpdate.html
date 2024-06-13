@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout
+      layout:decorate='~{layouts/layout1}'>
+
+
+    <title>회원 권한 수정</title>
+
+    <th:block layout:fragment="css">
+
+        <style>
+
+            .content{
+                width: 1200px;
+                text-align: center;
+                margin : 50px 0 50px 0;
+            }
+            input{
+                margin-top : 15px;
+            }
+            .mx-auto {
+                width: 100%;
+                margin-left: 100px;
+            }
+            label{
+                width: 75px;
+                text-align: center;
+            }
+
+            #memberRole{
+                margin-top: 30px;
+                width: 200px;
+            }
+
+            .update_date{
+                margin-left: 30px;
+            }
+            .back_date{
+                margin: 30px 0 0 30px;
+            }
+
+
+
+
+        </style>
+    </th:block>
+
+    <div layout:fragment="content">
+    <form action="/admin/roleUpdate" method="POST">
+        <div>
+            <div>
+                <h2>회원 정보 수정</h2>
+                <div class="mx-auto">
+                        <input type="hidden" id="memberId" name="memberId">
+                        <label for="memberName">이름 :</label>
+                        <input type="text" id="memberName" name="memberName" th:value="${member.memberName}" readonly> <br>
+                        <label for="memberEmail">이메일 :</label>
+                        <input type="email" id="memberEmail" name="memberEmail" th:value="${member.memberEmail}" readonly> <br>
+                        <label>현재 권한 :</label>
+                        <input type="text" th:value="${member.role}"> <br>
+                        <label for="memberRole">변경 권한 :</label>
+                        <select id="memberRole" name="memberRole">
+                            <option value="MEMBER">회원</option>
+                            <option value="ADMIN">관리자</option>
+                        </select>
+
+
+
+                </div>
+                <div class="mx-auto">
+                    <button class="update_date" type="submit">수정하기</button>
+                    <button class="back_date" onclick="@{'/admin/members/'}">뒤로가기</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+
+
+
+</html>
