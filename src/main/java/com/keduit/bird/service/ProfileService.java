@@ -24,7 +24,7 @@ public class ProfileService {
     //애플리케이션에 설정해둔 경로를 가져옴
 
     private final ProfileRepository profileRepository;
-    private final FileService fileService;
+    private final BoardImgService fileService;
 
     public void saveProfile(Profile profile, MultipartFile multipartFile)
         throws Exception{

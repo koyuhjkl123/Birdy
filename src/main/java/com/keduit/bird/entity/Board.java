@@ -28,5 +28,4 @@ public class Board extends BaseEntity{
     @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BoardImg> boardFileEntityList = new ArrayList<>();
 
-
 }

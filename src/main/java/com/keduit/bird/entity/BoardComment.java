@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "comment_table")
 public class BoardComment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

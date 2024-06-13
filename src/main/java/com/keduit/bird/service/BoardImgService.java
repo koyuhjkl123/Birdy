@@ -10,10 +10,9 @@ import java.util.UUID;
 @Service
 @Log
 // java의 롬복이 데려오기
-public class FileService {
+public class BoardImgService {
     public String uploadFile(String uploadPath, String originalFileName,
                              byte[] fileData) throws Exception{
-
         UUID uuid = UUID.randomUUID();
         // ID 랜덤 생성(Universally Unique Identifier) = 고유의 식별자 만들기
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
