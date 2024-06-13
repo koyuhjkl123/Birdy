@@ -2,7 +2,8 @@ package com.keduit.bird.service;
 
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.StringUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
@@ -11,6 +12,21 @@ import java.util.UUID;
 @Log
 // java의 롬복이 데려오기
 public class BoardImgService {
+
+    public void saveCommunityImg(BoardCommunityImg boardCommunityImg, MultipartFile multipartFile) throws Exception{
+        String oriImgName = multipartFile.getOriginalFilename();
+        String imgName = "";
+        String imgUrl = "";
+
+        if(!StringUtils.isEmpty(oriImgName)){
+            imgName = fileService.uploadFile(boardCommunityImgLocation,oriImgName, multipartFile.getBytes());
+            imgUrl = "/images/board/"+imgName;
+
+        }
+        boardCommunityImg.updateBoardImg(oriImgName,imgName,imgUrl);
+        boardCommunityImgRepository.save(boardCommunityImg);
+    }
+
     public String uploadFile(String uploadPath, String originalFileName,
                              byte[] fileData) throws Exception{
         UUID uuid = UUID.randomUUID();
@@ -43,4 +59,7 @@ public class BoardImgService {
             log.info("파일이 존재하지 않습니다.");
         }
     }
+
+
+
 }
