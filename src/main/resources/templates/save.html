@@ -4,6 +4,8 @@
       layout:decorate='~{layouts/layout1}'>
 
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script th:src="@{/js/board_save.js}"></script>
 </head>
 
