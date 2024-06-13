@@ -15,7 +15,9 @@ public class Board extends BaseEntity{
     @Id//pk
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    Member member;
     //이걸 작성자 = memberName으로 삼기.
     private String boardTitle;
     private String boardContent;
@@ -25,7 +27,6 @@ public class Board extends BaseEntity{
         this.boardTitle = boardCommunityFormDTO.getBoardTitle();
         this.boardContent = boardCommunityFormDTO.getBoardContent();
     }
-    @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<BoardImg> boardFileEntityList = new ArrayList<>();
-
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<BoardImg> boardImgs = new ArrayList<>();
 }

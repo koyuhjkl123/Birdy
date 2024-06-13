@@ -69,9 +69,8 @@ public class MainController {
 //            isFirstPage = true;
 //        }
 
-
         // 게시판 리스트 출력
-        List<BoardDTO> boardDTOList = boardService.findAll();
+        List<BoardDTO> boardDTOList = boardService.getBoardList();
 
         // 멸종 위기종 기준
         BirdGroup group = BirdGroup.I;

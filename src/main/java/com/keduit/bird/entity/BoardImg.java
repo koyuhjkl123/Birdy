@@ -17,7 +17,7 @@ public class BoardImg extends BaseEntity {
     private String imgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "board_id")
     private Board board;
 
     public void updateBoardImg(String oriImgName, String imgName, String imgUrl) {
