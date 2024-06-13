@@ -1,8 +1,8 @@
 package com.keduit.bird.service;
 
 import com.keduit.bird.dto.BoardDTO;
-import com.keduit.bird.entity.BoardEntity;
-import com.keduit.bird.entity.BoardFileEntity;
+import com.keduit.bird.entity.Board;
+import com.keduit.bird.entity.BoardImg;
 import com.keduit.bird.repository.BoardFileRepository;
 import com.keduit.bird.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,16 +10,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,12 +28,13 @@ public class BoardService {
     private final BoardFileRepository boardFileRepository;
     private final MemberService memberService;
 
-    public void save(BoardDTO boardDTO) throws IOException {
+    public void save(BoardDTO boardDTO,String email) throws IOException {
         //파일 첨부 여부에 따라서 로직을 분리
+        if(){}
         if (boardDTO.getBoardFile().isEmpty()) {
             //첨부 파일 없음.
             String memberName = getMemberNameFromAuthentication();
-            BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDTO, memberName);
+            Board boardEntity = Board.toSaveEntity(boardDTO, memberName);
             boardRepository.save(boardEntity);
         } else {
             //첨부파일 있음.
@@ -52,9 +50,9 @@ public class BoardService {
                 7. board_file_table에 해당 데이터 save 처리
              */
             String memberName = getMemberNameFromAuthentication();
-            BoardEntity boardEntity = BoardEntity.toSaveFileEntity(boardDTO, memberName);
+            Board boardEntity = Board.toSaveFileEntity(boardDTO, memberName);
             Long savedId = boardRepository.save(boardEntity).getId();
-            BoardEntity board = boardRepository.findById(savedId).get();
+            Board board = boardRepository.findById(savedId).get();
             for (MultipartFile boardFile : boardDTO.getBoardFile()) {
 //                MultipartFile boardFile = boardDTO.getBoardFile(); // 1.다중파일일경우 필요없는 부분
                 String originalFilename = boardFile.getOriginalFilename(); // 2.
@@ -62,7 +60,7 @@ public class BoardService {
                 String savePath = "C:/pj/members/" + storedFileName; // 4. 윈도우경로는 C:/springboot_img/ 그리고 9802398403948_내사진.jpg
                 boardFile.transferTo(new File(savePath)); // 5.
 
-                BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName);
+                BoardImg boardFileEntity = BoardImg.toBoardFileEntity(board, originalFilename, storedFileName);
                 boardFileRepository.save(boardFileEntity);
             }
         }
@@ -70,9 +68,9 @@ public class BoardService {
 
     @Transactional
     public List<BoardDTO> findAll() {
-        List<BoardEntity> boardEntityList = boardRepository.findAll();
+        List<Board> boardEntityList = boardRepository.findAll();
         List<BoardDTO> boardDTOList = new ArrayList<>();
-        for (BoardEntity boardEntity : boardEntityList) {
+        for (Board boardEntity : boardEntityList) {
             boardDTOList.add(BoardDTO.toBoardDTO(boardEntity));
         }
         return boardDTOList;
@@ -85,9 +83,9 @@ public class BoardService {
 
     @Transactional
     public BoardDTO findById(Long id) {
-        Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(id);
+        Optional<Board> optionalBoardEntity = boardRepository.findById(id);
         if (optionalBoardEntity.isPresent()) {
-            BoardEntity boardEntity = optionalBoardEntity.get();
+            Board boardEntity = optionalBoardEntity.get();
             BoardDTO boardDTO = BoardDTO.toBoardDTO(boardEntity);
             return boardDTO;
         } else {
@@ -97,7 +95,7 @@ public class BoardService {
 
     public BoardDTO update(BoardDTO boardDTO) {
         String memberName = getMemberNameFromAuthentication();
-        BoardEntity boardEntity = BoardEntity.toUpdateEntity(boardDTO, memberName);
+        Board boardEntity = Board.toUpdateEntity(boardDTO, memberName);
         boardRepository.save(boardEntity);
 
         return findById(boardDTO.getId());
@@ -110,7 +108,7 @@ public class BoardService {
     public Page<BoardDTO> paging(Pageable pageable) {
         int page = pageable.getPageNumber() - 1; //page 위치에 있는 값은 0부터 시작
         int pageLimit = 3; //한페이지에 보여줄 글 개수
-        Page<BoardEntity> boardEntities =
+        Page<Board> boardEntities =
                 boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
 
         System.out.println("boardEntities.getContent() = " + boardEntities.getContent()); // 요청 페이지에 해당하는 글
@@ -136,9 +134,9 @@ public class BoardService {
     }
     //작성자 컬럼 찾아오기.
     public List<BoardDTO> findByAdminBoardId(String adminBoardId){
-        List<BoardEntity> boardEntityList = boardRepository.findByAdminBoardId(adminBoardId);
+        List<Board> boardEntityList = boardRepository.findByAdminBoardId(adminBoardId);
         List<BoardDTO> boardDTOList = new ArrayList<>();
-        for (BoardEntity boardEntity : boardEntityList) {
+        for (Board boardEntity : boardEntityList) {
             boardDTOList.add(BoardDTO.toBoardDTO(boardEntity));
         }
         return boardDTOList;

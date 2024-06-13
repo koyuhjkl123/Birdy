@@ -1,6 +1,6 @@
 package com.keduit.bird.dto;
 
-import com.keduit.bird.entity.CommentEntity;
+import com.keduit.bird.entity.BoardComment;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,7 +17,7 @@ public class CommentDTO {
     private Long boardId;
     private LocalDateTime commentCreatedTime;
 
-    public static CommentDTO toCommentDTO(CommentEntity commentEntity, Long boardId) {
+    public static CommentDTO toCommentDTO(BoardComment commentEntity, Long boardId) {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setId(commentEntity.getId());
         commentDTO.setCommentWriter(commentEntity.getCommentWriter());

@@ -2,10 +2,8 @@ package com.keduit.bird.controller;
 
 import com.keduit.bird.dto.BoardDTO;
 import com.keduit.bird.dto.MemberFormDTO;
-import com.keduit.bird.entity.BoardEntity;
 import com.keduit.bird.entity.Member;
 import com.keduit.bird.entity.Profile;
-import com.keduit.bird.repository.BoardRepository;
 import com.keduit.bird.repository.MemberRepository;
 import com.keduit.bird.repository.ProfileRepository;
 import com.keduit.bird.service.BoardService;

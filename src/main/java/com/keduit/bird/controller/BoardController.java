@@ -36,9 +36,10 @@ public class BoardController {
     //작성자를 해당 유저의 이름으로 자동적용시키기위해 코드 추가함.
     @PostMapping("/save")
     public String save(@ModelAttribute BoardDTO boardDTO, Principal principal) throws IOException {
+        String email = principal.getName();
         System.out.println("boardDTO = " + boardDTO);
-        boardDTO.setAdminBoardId(memberService.findMemberNameByMemberEmail(principal.getName()));
-        boardService.save(boardDTO);
+        boardDTO.setEmail(memberService.findMemberNameByMemberEmail(principal.getName()));
+        boardService.save(boardDTO,email);
         return "redirect:/board/paging";
     }
 

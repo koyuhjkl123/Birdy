@@ -1,8 +1,8 @@
 package com.keduit.bird.service;
 
 import com.keduit.bird.dto.CommentDTO;
-import com.keduit.bird.entity.BoardEntity;
-import com.keduit.bird.entity.CommentEntity;
+import com.keduit.bird.entity.Board;
+import com.keduit.bird.entity.BoardComment;
 import com.keduit.bird.repository.BoardRepository;
 import com.keduit.bird.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +20,10 @@ public class CommentService {
 
     public Long save(CommentDTO commentDTO) {
         /* 부모엔티티(BoardEntity) 조회 */
-        Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(commentDTO.getBoardId());
+        Optional<Board> optionalBoardEntity = boardRepository.findById(commentDTO.getBoardId());
         if (optionalBoardEntity.isPresent()) {
-            BoardEntity boardEntity = optionalBoardEntity.get();
-            CommentEntity commentEntity = CommentEntity.toSaveEntity(commentDTO, boardEntity);
+            Board boardEntity = optionalBoardEntity.get();
+            BoardComment commentEntity = BoardComment.toSaveEntity(commentDTO, boardEntity);
             return commentRepository.save(commentEntity).getId();
         } else {
             return null;
@@ -31,11 +31,11 @@ public class CommentService {
     }
 
     public List<CommentDTO> findAll(Long boardId) {
-        BoardEntity boardEntity = boardRepository.findById(boardId).get();
-        List<CommentEntity> commentEntityList = commentRepository.findAllByBoardEntityOrderByIdDesc(boardEntity);
+        Board boardEntity = boardRepository.findById(boardId).get();
+        List<BoardComment> commentEntityList = commentRepository.findAllByBoardEntityOrderByIdDesc(boardEntity);
         /* EntityList -> DTOList */
         List<CommentDTO> commentDTOList = new ArrayList<>();
-        for (CommentEntity commentEntity: commentEntityList) {
+        for (BoardComment commentEntity: commentEntityList) {
             CommentDTO commentDTO = CommentDTO.toCommentDTO(commentEntity, boardId);
             commentDTOList.add(commentDTO);
         }
