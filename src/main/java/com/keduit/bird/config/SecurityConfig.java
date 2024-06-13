@@ -49,7 +49,7 @@ public class SecurityConfig{
                 // 앞서 작성한 경로는 누구나 접근 가능하도록 All 설정
                 .mvcMatchers("/bird/**", "/member/**", "/myPage/**", "/", "/board/**", "/intro/**")
                 .hasAnyRole("MEMBER","ADMIN")
-                .mvcMatchers("/admin/**", "/member/**")
+                .mvcMatchers("/admin/**")
                 // "/admin/**" 경로에 대한 권한 설정
                 .hasRole("ADMIN")
                 // "ADMIN" 권한을 가진 사용자의 접근일 경우 가능하며,
