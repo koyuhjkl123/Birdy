@@ -3,6 +3,7 @@ package com.keduit.bird.controller;
 import com.keduit.bird.constant.Role;
 import com.keduit.bird.dto.BoardDTO;
 import com.keduit.bird.dto.CommentDTO;
+import com.keduit.bird.entity.Board;
 import com.keduit.bird.entity.Member;
 import com.keduit.bird.repository.MemberRepository;
 import com.keduit.bird.service.BoardService;
@@ -10,6 +11,7 @@ import com.keduit.bird.service.CommentService;
 import com.keduit.bird.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -69,10 +71,13 @@ public class BoardController {
     return "redirect:/board/list";
 }
 
-    @GetMapping({"/list","list/{page}"})
-    public String boardList(Model model){
-        List<BoardDTO> boardDTOList = boardService.getBoardList();
-        model.addAttribute("boardList",boardDTOList);
+    @GetMapping({"/list","/list/"})
+    public String boardList( @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "10") int size,
+                            Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Board> boardPage = boardService.getBoardPage(pageable);
+        model.addAttribute("boardPage", boardPage);
         return "paging";
     }
 

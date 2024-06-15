@@ -23,13 +23,27 @@
                 <th>date</th>
                 <th>hits</th>
             </tr>
-            <tr th:each="board: ${boardList}">
+            <tr th:each="board: ${boardPage.content}">
                 <td th:text="${board.id}"></td>
                 <td th:text="${board.boardTitle}"></td>
-                <td th:text="${board.nickName}"></td>
-                <td th:text="*{#temporals.format(board.regTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td th:text="${board.member.memberName}"></td>
+                <td th:text="*{#temporals.format(board.BoardCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td th:text="${board.count}"></td>
             </tr>
         </table>
+
+        <div class="pagination">
+            <ul>
+                <li th:if="${boardPage.hasPrevious()}">
+                    <a th:href="@{/admin/list/(page=${boardPage.number - 1}, size=${boardPage.size})}">&laquo; 이전</a>
+                </li>
+                <li th:each="pageNumber : ${#numbers.sequence(0, boardPage.totalPages - 1)}" th:class="${boardPage.number == pageNumber} ? 'active'">
+                    <a th:href="@{/admin/list/(page=${pageNumber}, size=${boardPage.size})}" th:text="${pageNumber + 1}"></a>
+                </li>
+                <li th:if="${boardPage.hasNext()}">
+                    <a th:href="@{/admin/list/(page=${boardPage.number + 1}, size=${boardPage.size})}">다음 &raquo;</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </html>

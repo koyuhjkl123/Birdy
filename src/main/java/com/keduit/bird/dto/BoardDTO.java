@@ -24,5 +24,16 @@ public class BoardDTO {
     private int count;//조회수
     private String nickName;
 
+    public BoardDTO(Long id, String boardTitle, String nickName, LocalDateTime regTime, int count) {
+        this.id = id;
+        this.boardTitle = boardTitle;
+        this.nickName = nickName;
+        this.regTime = regTime;
+        this.count = count;
+    }
 
+
+    public BoardDTO() {
+
+    }
 }

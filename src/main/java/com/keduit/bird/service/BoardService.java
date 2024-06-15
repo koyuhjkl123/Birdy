@@ -9,6 +9,8 @@ import com.keduit.bird.repository.BoardImgRepository;
 import com.keduit.bird.repository.BoardRepository;
 import com.keduit.bird.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +72,27 @@ public class BoardService {
         }
         return boardDTOList;
     }
+
+//    public Page<BoardDTO> getBoardPage(Pageable pageable) {
+//        Page<Board> boardPage = boardRepository.findAll(pageable);
+//
+//        // Board 엔티티를 BoardDTO로 매핑하여 Page<BoardDTO>로 반환
+//        return boardPage.map(board -> new BoardDTO(
+//                board.getId(),
+//                board.getBoardTitle(),
+//                board.getMember().getMemberName(), // 예시: Board 엔티티에 Member가 있다고 가정
+//                board.getBoardCreatedTime(),
+//                board.getCount()
+//        ));
+//    }
+
+
+
+    public Page<Board> getBoardPage(Pageable pageable) {
+       return boardRepository.findAll(pageable);
+
+    }
+
 
 
 
