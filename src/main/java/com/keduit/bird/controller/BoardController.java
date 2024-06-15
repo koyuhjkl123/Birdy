@@ -1,5 +1,6 @@
 package com.keduit.bird.controller;
 
+import com.keduit.bird.constant.Role;
 import com.keduit.bird.dto.BoardDTO;
 import com.keduit.bird.dto.CommentDTO;
 import com.keduit.bird.entity.Member;
@@ -32,50 +33,47 @@ public class BoardController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
-    @GetMapping("/save")
-    public String saveForm(Principal principal, Model model){
-//        String memberEmail = principal.getName();
-//        String adminBoardId = memberService.findMemberNameByMemberEmail(memberEmail);
-//        model.addAttribute("adminBoardId", adminBoardId);
+    @GetMapping("/insertForm")
+    public String saveForm(Principal principal){
+        String email = principal.getName();
+        Member member = memberRepository.findByMemberEmail(email);
+        if(member == null){
+//           만약에 시큐리티에서도 했지만 한번 더 확인
+            return "/members/login";
+        }
+        if(member.getRole().equals(Role.STOP)){
+//           정지된 사람도 다시 로그인 페이지로 이동
+            return "/members/login";
+        }
         return "save";
     }
     //작성자를 해당 유저의 이름으로 자동적용시키기위해 코드 추가함.
 
     @PostMapping("/save")
-    public String save(@RequestParam Map<String, String> requestData,
+    public String save(@RequestParam("boardTitle") String title,
+                       @RequestParam("boardContent") String content,
                        @RequestParam("boardImgFile") List<MultipartFile> imgFiles,
-                       BindingResult bindingResult, Principal principal) throws Exception {
-        String email = principal.getName();
-        Member member = memberRepository.findByMemberEmail(email);
-        if (member == null) {
-            System.out.println("데이터베이스에 없는 회원입니다.");
-            return "redirect:/board/list";
-        }
-        if (bindingResult.hasErrors()) {
-            System.out.println("에러발생 -+-++" + bindingResult.getAllErrors());
-            return "redirect:/board/list";
-        }
-        String title = requestData.get("title");
-        String content = requestData.get("content");
-
-        System.out.println("제목+++++++++" + title);
-        System.out.println("내용+++++++++" + content);
-        System.out.println("업로드된 이미지 수+++++++++" + imgFiles.size());
-
-        BoardDTO boardDTO = new BoardDTO();
-        boardDTO.setBoardTitle(title);
-        boardDTO.setBoardContent(content);
-        boardService.insertBoard(boardDTO, imgFiles, email);
-
+                       Principal principal) throws Exception{
+    String email = principal.getName();
+    Member member = memberRepository.findByMemberEmail(email);
+    if (member == null) {
+        System.out.println("데이터베이스에 없는 회원입니다.");
         return "redirect:/board/list";
     }
+    BoardDTO boardDTO = new BoardDTO();
+    boardDTO.setBoardTitle(title);
+    boardDTO.setBoardContent(content);
+    boardDTO.setEmail(email);
+    boardService.insertBoard(boardDTO, imgFiles, email);
 
-    @GetMapping("/list")
+    return "redirect:/board/list";
+}
+
+    @GetMapping({"/list","list/{page}"})
     public String boardList(Model model){
         List<BoardDTO> boardDTOList = boardService.getBoardList();
         model.addAttribute("boardList",boardDTOList);
         return "paging";
     }
-
 
 }

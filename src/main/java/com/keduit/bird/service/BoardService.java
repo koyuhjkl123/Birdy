@@ -44,7 +44,7 @@ public class BoardService {
         board.setBoardContent(boardDTO.getBoardContent());
         board.setBoardTitle(boardDTO.getBoardTitle());
         board.setMember(member);
-//      Board board = boardRepository.save(boardDTO);
+        boardRepository.save(board);
         for (int i = 0; i < boardImgFileList.size(); i++) {
             BoardImg BoardImg = new BoardImg();
             BoardImg.setBoard(board);
@@ -52,18 +52,20 @@ public class BoardService {
         }
         return board.getId();
     }
+
+
     public List<BoardDTO> getBoardList(){
         List<Board> boardList = boardRepository.findAll();
         String nickName;
 
         List<BoardDTO> boardDTOList = new ArrayList<>();
         for (Board board : boardList) {
-
             BoardDTO boardDTO = new BoardDTO();
             boardDTO.setId(board.getId());
             boardDTO.setNickName(board.getMember().getMemberName());
             boardDTO.setBoardTitle(board.getBoardTitle());
             boardDTO.setBoardContent(board.getBoardContent());
+            boardDTO.setCount(board.getCount());
             boardDTOList.add(boardDTO);
         }
         return boardDTOList;
