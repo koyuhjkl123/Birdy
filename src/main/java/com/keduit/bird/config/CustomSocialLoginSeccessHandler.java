@@ -26,15 +26,13 @@ public class CustomSocialLoginSeccessHandler implements AuthenticationSuccessHan
         //유저 정보
 
         //담기
-//        MemberSecurityDTO memberSecurityDTO = (MemberSecurityDTO) authentication.getPrincipal();
-//        String encodedPw = memberSecurityDTO.getPassword();
         if (authentication.getPrincipal() instanceof MemberSecurityDTO) {
             MemberSecurityDTO memberSecurityDTO = (MemberSecurityDTO) authentication.getPrincipal();
             String encodedPw = memberSecurityDTO.getPassword();
 
             if (memberSecurityDTO.isSocial()) {
-                log.info("비밀번호를 변경할 로직을 입력.");
-                log.info("받아온 새 비밀번호를 member에 업데이트.");
+                log.info("비밀번호를 변경할 로직을 입력");
+                log.info("받아온 새 비밀번호를 member에 업데이트");
                 response.sendRedirect("/");
             } else {
                 response.sendRedirect("/");
