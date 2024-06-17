@@ -1,25 +1,23 @@
 package com.keduit.bird.repository;
 
 import com.keduit.bird.entity.Board;
+
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
-
 public interface BoardRepository extends JpaRepository<Board, Long> {
-//    @Modifying
-//    @Query(value = "update Board b set b.boardHits=b.boardHits+1 where b.id=:id")
-//    void updateHits(@Param("id") Long id);
-//
-//    @Query("SELECT m.memberName FROM Member m WHERE m.memberEmail = :memberEmail")
-//    Optional<String> findMemberNameByMemberEmail(@Param("memberEmail") String memberEmail);
-//    //principal 을 통해 memberEmail 을 가져온다(getName)
-//
-//    List<Board> findByAdminBoardId(String adminBoardId);
+
+    Page<Board> findByBoardTitleContaining(String title, Pageable pageable);
+    Page<Board> findByBoardContentContaining(String content, Pageable pageable);
+    @Query("SELECT b FROM Board b WHERE b.boardTitle LIKE %:keyword% OR b.boardContent LIKE %:keyword%")
+    Page<Board> findFilterBoard(@Param("keyword") String keyword, Pageable pageable);
+    @Query("SELECT b FROM Board b JOIN b.member m WHERE m.memberName LIKE %:memberName%")
+    Page<Board> findByMemberNameContaining(@Param("memberName") String memberName, Pageable pageable);
+
+
+    
 
 }
-
-
