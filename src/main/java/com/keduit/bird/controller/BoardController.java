@@ -95,7 +95,8 @@ public class BoardController {
         Page<Board> boardPage = boardService.getBoardPage(pageable, type, keyword);
         System.out.println("boardPage++"+boardPage.getTotalElements());
         for (Board board : boardPage) {
-            System.out.println(board.toString());
+            System.out.println(board.getBoardContent());
+            System.out.println(board.getBoardTitle());
         }
         model.addAttribute("boardPage", boardPage);
         return "paging";
