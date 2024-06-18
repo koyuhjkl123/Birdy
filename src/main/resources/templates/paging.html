@@ -40,7 +40,9 @@
 
             <tr th:each="board: ${boardPage.content}">
                 <td th:text="${board.id}"></td>
-                <td th:text="${board.boardTitle}"></td>
+                <td >
+                    <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a>
+                </td>
                 <td th:text="${board.member.memberName}"></td>
                 <td th:text="*{#temporals.format(board.BoardCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td th:text="${board.count}"></td>

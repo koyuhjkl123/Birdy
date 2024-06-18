@@ -10,32 +10,35 @@
 <table>
   <tr>
     <th>id</th>
-    <td th:text="${board.id}"></td>
+    <td th:text="${boardDTO.id}"></td>
   </tr>
   <tr>
     <th>title</th>
-    <td th:text="${board.boardTitle}"></td>
+    <td th:text="${boardDTO.boardTitle}"></td>
   </tr>
   <tr>
     <th>writer</th>
-    <td th:text="${board.adminBoardId}"></td>
+    <td th:text="${boardDTO.nickName}"></td>
   </tr>
   <tr>
     <th>date</th>
-    <td th:text="${board.BoardCreatedTime}"></td>
+    <td th:text="${boardDTO.regTime}"></td>
   </tr>
-  <tr>
+  <!-- <tr>
     <th>hits</th>
-    <td th:text="${board.boardHits}"></td>
-  </tr>
+    <td th:text="${boardDTO.boardHits}"></td>
+  </tr> -->
   <tr>
     <th>contents</th>
-    <td th:text="${board.boardContent}"></td>
+    <td th:text="${boardDTO.boardContent}"></td>
   </tr>
-  <tr th:if="${board.fileAttached == 1}">
+  <tr>
     <th>image</th>
-    <td th:each="fileName: ${board.storedFileName}">
-      <img th:src="@{|/images/${fileName}|}" alt="사진">
+    <!-- <td>
+      <img th:src="${boardDTO.imgUrl}">
+    </td> -->
+    <td>
+      <img src="pj/members/400ad52e-0dcd-468e-bf46-3f2a704bf428.jpg">
     </td>
   </tr>
 </table>
@@ -43,89 +46,26 @@
 <button onclick="updateReq()">수정</button>
 <button onclick="deleteReq()">삭제</button>
 
-<!-- 댓글 작성 부분 -->
-<div id="comment-write">
-  <input type="text" id="commentWriter" placeholder="작성자">
-  <input type="text" id="commentContents" placeholder="내용">
-  <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
+
+<div class="card m-2" id="comments-new">
+  <form action="/board/comment/insert" method="POST" id="commentWrite"
+        sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
+      <div class="card-body">
+          <!-- 댓글 작성 폼 -->
+          <!-- 댓글 본문 입력 -->
+          <div class="mb-3">
+              <label class="form-label">댓글 내용</label>
+              <textarea type="text" class="form-control form-control-sm" rows="3" id="new-comment-body review"
+                        name="comment"></textarea>
+          </div>
+          <input type="hidden" name="boardId" th:value="${boardDTO.id}">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+          <button type="submit" class="btn btn-outline-primary btn-sm" id="comment-create-btn">댓글 작성</button>
+      </div>
+  </form>
 </div>
 
-<!-- 댓글 출력 부분 -->
-<div id="comment-list">
-  <table>
-    <tr>
-      <th>댓글번호</th>
-      <th>작성자</th>
-      <th>내용</th>
-      <th>작성시간</th>
-    </tr>
-    <tr th:each="comment: ${commentList}">
-      <td th:text="${comment.id}"></td>
-      <td th:text="${comment.commentWriter}"></td>
-      <td th:text="${comment.commentContents}"></td>
-      <td th:text="${comment.commentCreatedTime}"></td>
-    </tr>
-  </table>
-</div>
+
 
 </body>
-<script th:inline="javascript">
-  const commentWrite = () => {
-       const writer = document.getElementById("commentWriter").value;
-       const contents = document.getElementById("commentContents").value;
-       console.log("작성자: ", writer);
-       console.log("내용: ", contents);
-       const id = [[${board.id}]];
-       $.ajax({
-          // 요청방식: post, 요청주소: /comment/save, 요청데이터: 작성자, 작성내용, 게시글번호
-          type: "post",
-          url: "/comment/save",
-          data: {
-              "commentWriter": writer,
-              "commentContents": contents,
-              "boardId": id
-          },
-          success: function (res) {
-              console.log("요청성공", res);
-              let output = "<table>";
-              output += "<tr><th>댓글번호</th>";
-              output += "<th>작성자</th>";
-              output += "<th>내용</th>";
-              output += "<th>작성시간</th></tr>";
-              for (let i in res) {
-                  output += "<tr>";
-                  output += "<td>" + res[i].id + "</td>";
-                  output += "<td>" + res[i].commentWriter + "</td>";
-                  output += "<td>" + res[i].commentContents + "</td>";
-                  output += "<td>" + res[i].commentCreatedTime + "</td>";
-                  output += "</tr>";
-              }
-              output += "</table>";
-              document.getElementById('comment-list').innerHTML = output;
-              document.getElementById('commentWriter').value = '';
-              document.getElementById('commentContents').value = '';
-          },
-          error: function (err) {
-              console.log("요청실패", err);
-          }
-       });
-
-   }
-const listReq = () => {
-console.log("목록 요청");
-const page = [[${page}]];
-location.href = "/board/paging?=page="+page;
-}
-const updateReq = () => {
-console.log("수정 요청");
-const id = [[${board.id}]];
-location.href = "/board/update/" + id;
-}
-const deleteReq = () => {
-console.log("삭제 요청");
-const id = [[${board.id}]];
-location.href = "/board/delete/" + id;
-}
-
-</script>
 </html>

@@ -27,6 +27,7 @@ public class BoardService {
     private final BoardImgService boardImgService;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final BoardImgRepository boardImgRepository;
 
     public Long insertBoard(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,String email) throws Exception {
         System.out.println("등록 메서드 도착");
@@ -108,6 +109,37 @@ public Page<Board> getBoardPage(Pageable pageable, String type, String keyword) 
         return boardRepository.findAll(pageable);
     }
 }
+
+
+public BoardDTO getOneBoard(Long boardId) {
+
+
+    BoardDTO boardDTO = new BoardDTO();
+    // 게시글 찾기
+    Board board = boardRepository.findById(boardId).orElse(null);
+
+    // 이미지 찾기
+    BoardImg boardImg = boardImgRepository.findByBoardId(boardId);
+
+    // 게시글 내용이 있다면
+    if (board != null) {
+        boardDTO.setBoardTitle(board.getBoardTitle());
+        boardDTO.setBoardContent(board.getBoardContent());
+        boardDTO.setNickName(board.getMember().getMemberName()); 
+        boardDTO.setRegTime(board.getBoardCreatedTime());
+        boardDTO.setUpdateTime(board.getBoardUpDatedTime());
+        if (boardImg != null) {
+            boardDTO.setImgUrl(boardImg.getImgUrl());
+        }
+    // 게시글이 없다면
+    } else {
+        throw new RuntimeException("게시물을 찾지 못하였습니다. " + boardId);
+    }
+    return boardDTO;
+}
+
+
+
 
 
 

@@ -10,6 +10,8 @@ import com.keduit.bird.service.BoardService;
 import com.keduit.bird.service.CommentService;
 import com.keduit.bird.service.MemberService;
 import lombok.RequiredArgsConstructor;
+
+import org.hibernate.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -87,11 +89,6 @@ public class BoardController {
                              @RequestParam(required = false) String keyword,
                             Model model){
         String search = "";
-        System.out.println("컨틀로러 도착");
-        System.out.println("page"+page);
-        System.out.println("size"+size);
-        System.out.println("type"+type);
-        System.out.println("keyword"+keyword); 
         Pageable pageable = PageRequest.of(page, size);
         Page<Board> boardPage = boardService.getBoardPage(pageable, type, keyword);
 
@@ -111,6 +108,18 @@ public class BoardController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("boardPage", boardPage);
         return "paging";
+    }
+    
+
+    @GetMapping("/{id}")
+    public String oneBoard(@PathVariable("id") Long boardId,Model model){
+
+        System.out.println("하나조회 컨트롤러왔음");
+
+        BoardDTO boardDTO = boardService.getOneBoard(boardId);
+        model.addAttribute("boardDTO", boardDTO);
+
+        return "detail";
     }
 
 }
