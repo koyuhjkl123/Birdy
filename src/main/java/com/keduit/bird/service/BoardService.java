@@ -90,6 +90,7 @@ public class BoardService {
 
 public Page<Board> getBoardPage(Pageable pageable, String type, String keyword) {
     System.out.println("서비스 코드 도착");
+    System.out.println("keyword"+keyword);
     if ("titleAndContent".equals(type)) {
         System.out.println("첫번째 문");
         return boardRepository.findFilterBoard(keyword, pageable);

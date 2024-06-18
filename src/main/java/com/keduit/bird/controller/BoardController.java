@@ -81,7 +81,7 @@ public class BoardController {
 
 
     @GetMapping({"/list","/list/{page}"})
-    public String boardList( @RequestParam(defaultValue = "0") int page,
+    public  String boardList( @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "10") int size,
                              @RequestParam(required = false) String type,
                              @RequestParam(required = false) String keyword,
@@ -93,6 +93,10 @@ public class BoardController {
         System.out.println("keyword"+keyword);       
         Pageable pageable = PageRequest.of(page, size);
         Page<Board> boardPage = boardService.getBoardPage(pageable, type, keyword);
+        System.out.println("boardPage++"+boardPage.getTotalElements());
+        for (Board board : boardPage) {
+            System.out.println(board.toString());
+        }
         model.addAttribute("boardPage", boardPage);
         return "paging";
     }

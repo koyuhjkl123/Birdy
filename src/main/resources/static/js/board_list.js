@@ -1,8 +1,7 @@
 $(document).ready(function() {
 
     $("#search").click(function() {
-        alert("클릭됨");
-        
+
         var searchType = $('#searchType').val();
         console.log("searchType"+searchType);
         var searchKeyword = $('#searchKeyword').val();
@@ -15,8 +14,6 @@ $(document).ready(function() {
             page: page,
             size: size
         };
-        console.log(" JSON.stringify(requestData),"+ JSON.stringify(requestData),);
-        alert("클릭됨")
         $.ajax({
             url: "/board/list/",
             type: "GET",
@@ -24,7 +21,6 @@ $(document).ready(function() {
             data: requestData, // JSON 형식으로 데이터 전송
             cache: false,
             success: function(){
-                location.reload();
                 alert("검색 성공");
             },
             error: function(jqXHR, status, error) {
