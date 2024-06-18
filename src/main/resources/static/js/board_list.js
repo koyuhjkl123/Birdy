@@ -1,37 +1,47 @@
-$(document).ready(function() {
+// $(document).ready(function() {
+//     $("#search").click(function() {
+//         var searchType = $('#searchType').val();
+//         var searchKeyword = $('#searchKeyword').val();
+//         var page = 0; // 페이지는 0부터 시작
+//         var size = 10; // 페이지당 게시글 수
 
-    $("#search").click(function() {
+//         // 쿼리 문자열 구성
+//         var queryParams = $.param({
+//             type: searchType,
+//             page: page,
+//             size: size,
+//             keyword: searchKeyword
+//         });
 
-        var searchType = $('#searchType').val();
-        console.log("searchType"+searchType);
-        var searchKeyword = $('#searchKeyword').val();
-        console.log("searchKeyword"+searchKeyword);
-        var page = 0; // 페이지는 0부터 시작
-        var size = 10; // 게시시글 수
-        var requestData = {
-            type: searchType,
-            keyword: searchKeyword,
-            page: page,
-            size: size
-        };
-        $.ajax({
-            url: "/board/list/",
-            type: "GET",
-            contentType: "application/json",
-            data: requestData, // JSON 형식으로 데이터 전송
-            cache: false,
-            success: function(){
-                alert("검색 성공");
-            },
-            error: function(jqXHR, status, error) {
-                alert(jqXHR.responseText);
-                console.error("오류 확인", error);
-            }
-        });
-    });
+//         // AJAX 요청
+//         $.ajax({
+//             url: "/api/board/list?" + queryParams,
+//             type: "GET",
+//             success: function(response) {
+//                 updateResults(response); // 검색 결과 업데이트
+//             },
+//             error: function(jqXHR, textStatus, errorThrown) {
+//                 console.error("AJAX 오류 발생: " + textStatus, errorThrown);
+//             }
+//         });
+//     });
 
+//     function updateResults(data) {
+//         var resultsTableBody = $("#resultsTable tbody");
+//         resultsTableBody.empty(); // 기존 결과 지우기
 
-});
+//         // 데이터를 테이블에 추가
+//         data.content.forEach(function(board) {
+//             var row = "<tr>" +
+//                       "<td>" + board.boardTitle + "</td>" +
+//                       "<td>" + board.boardContent + "</td>" +
+//                       "</tr>";
+//             resultsTableBody.append(row);
+//         });
+//     }
+// });
+
 function saveReq() {
     location.href = "/board/insertForm";
 }
+

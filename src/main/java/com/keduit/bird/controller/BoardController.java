@@ -80,24 +80,35 @@ public class BoardController {
 
 
 
-    @GetMapping({"/list","/list/{page}"})
+    @GetMapping({"/list","/list/{requestData}"})
     public  String boardList( @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "10") int size,
                              @RequestParam(required = false) String type,
                              @RequestParam(required = false) String keyword,
                             Model model){
+        String search = "";
         System.out.println("컨틀로러 도착");
         System.out.println("page"+page);
         System.out.println("size"+size);
         System.out.println("type"+type);
-        System.out.println("keyword"+keyword);       
+        System.out.println("keyword"+keyword); 
         Pageable pageable = PageRequest.of(page, size);
         Page<Board> boardPage = boardService.getBoardPage(pageable, type, keyword);
-        System.out.println("boardPage++"+boardPage.getTotalElements());
-        for (Board board : boardPage) {
-            System.out.println(board.getBoardContent());
-            System.out.println(board.getBoardTitle());
+
+        if ("titleAndContent".equals(type)) {
+            search = "제목+내용";
+        } 
+        if ("title".equals(type)) {
+            search = "제목";
         }
+        if ("content".equals(type)) {
+            search = "내용";
+        }
+        if ("writer".equals(type)) {
+            search = "작성자";
+        } 
+        model.addAttribute("search", search);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("boardPage", boardPage);
         return "paging";
     }
