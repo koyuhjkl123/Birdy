@@ -5,19 +5,22 @@ $(document).ready(function () {
         event.preventDefault();
 
         // 입력받은 값 가져오기
-        const review = $("textarea[name='comment']").val();
-        const eventId = $("input[name='boardId']").val();
-
-        // Get the CSRF token and header
+        const comment = $("textarea[name='comment']").val();
+        const boardId = $("input[name='boardId']").val();
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
+        const requestData = {"comment": comment
+        }
+        alert("comment"+comment);
+        alert("boardId"+boardId);
 
-        // Send AJAX request
+
+
         $.ajax({
-            url: "/comment/insert/" + eventId,
+            url: "/comment/insert/" + boardId,
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify({"review": review}),
+            data: JSON.stringify(requestData),
             beforeSend: function(xhr) {
                 xhr.setRequestHeader(header, token);
             },
@@ -45,19 +48,23 @@ $(document).ready(function () {
 
 
 
-    $("#reviewUpdate").click(function() {
+    $("#commentUpdate").click(function() {
+
+    
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
-        const review = $("#review-content").val();
-        const eventId = $("input[name='eventId']").val();
-        const reviewId = $("input[name='reviewId']").val();
-        const requestData = { "review": review,
-            "eventId": eventId,
-            "reviewId": reviewId
+        const comment = $("#comment-content").val();
+        const boardId = $("input[name='boardId']").val();
+        const commentId = $("input[name='commentId']").val();
+        const requestData = { 
+            "comment": comment,
+            "boardId": boardId,
+
         }; // 요청 데이터 구성
 
+
         $.ajax({
-            url: "/user/review/update/"+reviewId,  // 현재 위치를 돌아오기위해서 사용
+            url: "/comment/update/"+commentId,  // 현재 위치를 돌아오기위해서 사용
             type: "PUT",
             contentType: "application/json",
             data: JSON.stringify(requestData), // JSON 형식으로 데이터 전송
@@ -79,17 +86,17 @@ $(document).ready(function () {
 
 
     //  댓글 삭제
-    $(".reviewDelete").click(function() {
+    $(".commentDelete").click(function() {
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
-        const reviewId = $(this).attr("data-review-id");
+        const commentId = $(this).attr("data-comment-id");
 
         const requestData = {
-            "reviewId": reviewId
+            "commentId": commentId
         }; // 요청 데이터 구성
-        alert("reviewId"+JSON.stringify(requestData));
+        alert("commentId"+JSON.stringify(requestData));
         $.ajax({
-            url: "/user/review/delete/"+reviewId,  // 삭제
+            url: "/user/comment/delete/"+commentId,  // 삭제
             type: "DELETE",
             contentType: "application/json",
             data: JSON.stringify(requestData), // JSON 형식으로 데이터 전송
@@ -112,14 +119,14 @@ $(document).ready(function () {
 
 
 
-        $('.review-update-btn').click(function () {
-            const reviewId = $(this).data('review-id');
-            const reviewCreatedBy = $(this).data('review-created-by');
-            const reviewContent = $(this).data('review-content');
+        $('.comment-update-btn').click(function () {
+            const commentId = $(this).data('comment-id');
+            const commentCreatedBy = $(this).data('comment-created-by');
+            const commentContent = $(this).data('comment-content');
 
-            $('#exampleModalLabel').text(reviewCreatedBy);
-            $('#review-content').val(reviewContent);
-            $('#review-id').val(reviewId);
+            $('#exampleModalLabel').text(commentCreatedBy);
+            $('#comment-content').val(commentContent);
+            $('#comment-id').val(commentId);
             $('#exampleModal').modal('show');
         });
 

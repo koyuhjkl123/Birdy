@@ -122,7 +122,9 @@ public BoardDTO getOneBoard(Long boardId) {
     BoardImg boardImg = boardImgRepository.findByBoardId(boardId);
 
     // 게시글 내용이 있다면
+    
     if (board != null) {
+        boardDTO.setId(boardId);
         boardDTO.setBoardTitle(board.getBoardTitle());
         boardDTO.setBoardContent(board.getBoardContent());
         boardDTO.setNickName(board.getMember().getMemberName()); 

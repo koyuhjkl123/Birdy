@@ -4,6 +4,7 @@ import com.keduit.bird.constant.Role;
 import com.keduit.bird.dto.BoardDTO;
 import com.keduit.bird.dto.CommentDTO;
 import com.keduit.bird.entity.Board;
+import com.keduit.bird.entity.BoardComment;
 import com.keduit.bird.entity.Member;
 import com.keduit.bird.repository.MemberRepository;
 import com.keduit.bird.service.BoardService;
@@ -115,8 +116,12 @@ public class BoardController {
     public String oneBoard(@PathVariable("id") Long boardId,Model model){
 
         System.out.println("하나조회 컨트롤러왔음");
-
+        
+        List<CommentDTO> commentDTOs = commentService.getBoardComment(boardId);
         BoardDTO boardDTO = boardService.getOneBoard(boardId);
+
+
+        model.addAttribute("commentDTOs", commentDTOs);
         model.addAttribute("boardDTO", boardDTO);
 
         return "detail";
