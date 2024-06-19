@@ -87,7 +87,7 @@
               >
                                수정
                       </button>
-                      <button type="button" class="btn btn-danger reviewDelete"
+                      <button type="button" class="btn btn-danger commentDelete"
                               th:attr="data-comment-id=${comment.id}"
                               th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')
                               and #authentication.principal.username == comment.email}">삭제
@@ -100,7 +100,7 @@
                               data-comment-content=${comment.commentContents}"
                       >수정
                       </button>
-                      <button type="button" class="btn btn-danger reviewDelete"
+                      <button type="button" class="btn btn-danger commentDelete"
                               th:attr="data-comment-id=${comment.id}"
                               th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">삭제
                       </button>

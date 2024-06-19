@@ -51,53 +51,52 @@ public class CommentController {
 
 
     @PutMapping("/update/{commentId}")
-    public ResponseEntity<String> commentUpate(@PathVariable Long commentId,
-                                             @RequestBody Map<String, String> requestData,
-                                             BindingResult bindingResult,
-                                             Principal principal) {
-        try{
+    public ResponseEntity<String> commentUpdate(@PathVariable Long commentId,
+                                                @RequestBody Map<String, String> requestData,
+                                                BindingResult bindingResult,
+                                                Principal principal) {
+        try {
             System.out.println("컨트롤러 들옴..!!");
             Long boardId = Long.parseLong(requestData.get("boardId"));
-            Board board = boardRepository.findById(boardId).orElse(null);
             String comment = requestData.get("comment");
             String email = principal.getName();
-            CommnentDTO boardComment = new CommentDTO();
+            CommentDTO boardComment = new CommentDTO();
             boardComment.setId(commentId);
             boardComment.setEmail(email);
-            boardComment.setContent(comment);
-            boardComment.setBoard(board);
-            // System.out.println("boardComment++++"+boardComment.toString());
+            boardComment.setCommentContents(comment);
+            boardComment.setBoardId(boardId);
+            System.out.println("boardComment: " + boardComment.toString());
+
             commentService.commentUpdate(boardComment);
-
+            return new ResponseEntity<>("댓글 업데이트 완료.", HttpStatus.OK);
+        } catch (UsernameNotFoundException | IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    
+    }
 
+    @DeleteMapping("/delete/{commentId}")
+    public ResponseEntity<String> reviewDelete(@PathVariable Long commentId,
+                                               @RequestBody Map<String, String> requestData,
+                                               BindingResult bindingResult,
+                                               Principal principal) {
+        
+        String email = principal.getName();
+        try {
+            System.out.println("삭제 컨트롤러+++");
+            commentService.commentDelete(commentId, email);
+            return new ResponseEntity<>("댓글 삭제 완료.", HttpStatus.OK);
+        } 
+        catch (UsernameNotFoundException | IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } 
         catch (Exception e) {
             return new ResponseEntity<>("서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-
-
-
-
-       
-
-        return ResponseEntity.badRequest().body(null);
     }
 
-    // @DeleteMapping("/user/review/delete/{reviewId}")
-    // public ResponseEntity<Long> reviewDelete(@PathVariable Long reviewId,
-    //                                          @RequestBody Map<String, String> requestData,
-    //                                          BindingResult bindingResult,
-    //                                          Principal principal) {
 
-    //     Long reviewno = Long.parseLong(requestData.get("reviewId"));
-    //     String email = principal.getName();
-    //     if (!bindingResult.hasErrors()) {
-    //         BoardReview boardReview = commentRepository.findByReviewNo(reviewno);
-    //         commentService.deleteReview(reviewno, email);
-    //         return ResponseEntity.ok().body(boardReview.getReviewNo());
-    //     }
 
-    //     return ResponseEntity.badRequest().body(null);
-    // }
 }

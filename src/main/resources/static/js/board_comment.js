@@ -90,13 +90,12 @@ $(document).ready(function () {
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
         const commentId = $(this).attr("data-comment-id");
-
         const requestData = {
             "commentId": commentId
         }; // 요청 데이터 구성
         alert("commentId"+JSON.stringify(requestData));
         $.ajax({
-            url: "/user/comment/delete/"+commentId,  // 삭제
+            url: "/comment/delete/"+commentId,  // 삭제
             type: "DELETE",
             contentType: "application/json",
             data: JSON.stringify(requestData), // JSON 형식으로 데이터 전송
