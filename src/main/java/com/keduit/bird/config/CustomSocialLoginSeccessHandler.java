@@ -39,7 +39,7 @@ public class CustomSocialLoginSeccessHandler implements AuthenticationSuccessHan
             }
         }else {
             // Principal이 MemberSecurityDTO가 아닌 경우 처리
-            // 예: 소셜 로그인을 통한 경우
+            // 예: 소셜 로그인이 아닌 경우
             response.sendRedirect("/");
         }
     }

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate='~{layouts/layout1}'>
+
+<th:block layout:fragment="css">
+    <style th:inline="css">
+
+        <!-- 사용자 css 추가 -->
+        <style>
+            .fieldError {
+                color: #bd2130;
+            }
+.content{
+        text-align:center;
+        padding:50px;
+        }
+        table{
+        border:1px solid;
+        border-radius:20px;
+        border-collapse:collapse;
+        text-align:center;
+        }
+        th,td{
+        border: 1px solid gray;
+        }
+        td{
+        padding: 20px;
+        }
+
+    </style>
+</th:block>
+<th:block layout:fragment="script">
+    <!--사용자 스크립트 추가-->
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            const errorMessage = [[${errorMessage}]];
+            if(errorMessage){
+                alert(errorMessage);
+            }
+        });
+    </script>
+</th:block>
+
+<div layout:fragment="content">
+    <div>
+        <p>
+            <a th:href="@{/myPage/myPage_main}" class="btn btn-secondary me-2">MyPage_Main</a>
+            <a th:href="@{/myPage/boardList}" class="btn btn-secondary me-2">My List</a>
+            <a th:href="@{/myPage/comment}" class="btn btn-secondary me-2">My Comment</a>
+        </p>
+    </div>
+
+    <div id="comment-list">
+        <table>
+            <tr>
+                <th>댓글번호</th>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>작성시간</th>
+            </tr>
+            <tr th:each="comment: ${commentList}">
+                <td th:text="${comment.id}"></td>
+                <td th:text="${comment.commentWriter}"></td>
+                <td th:text="${comment.commentContents}"></td>
+                <td th:text="${#temporals.format(comment.commentCreatedTime, 'yyyy-MM-dd')}" ></td>
+            </tr>
+        </table>
+    </div>
+</div>
+</html>

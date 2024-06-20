@@ -51,11 +51,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             case "naver":
                 memberEmail = getNaverEmail(paramMap);
                 break;
+            case "google":
+                memberEmail = getGoogleEmail(paramMap);
+                break;
         }
         log.info("=====email=====");
         log.info(memberEmail);
         log.info("===============");
-
 
 //        return oAuth2User;
         return generateDTO(memberEmail, paramMap);
@@ -64,10 +66,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private MemberSecurityDTO generateDTO(String memberEmail, Map<String, Object> paramMap) {
         Member result = memberRepository.findByMemberEmail(memberEmail);
         System.out.println("*********" + result);
+
         if(result == null){
             //회원 추가
             Member member = new Member();
-            member.setMemberName("social");
+            member.setMemberName("소셜로그인");
             member.setMemberEmail(memberEmail);
             member.setMemberPwd(passwordEncoder.encode("0000"));
             member.setSocial(true);
@@ -125,4 +128,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return null;
     }
-}
+
+    // 구글
+    private String getGoogleEmail(Map<String, Object> paramMap) {
+        log.info("======== 구글 로그인 ============");
+        log.info("paramMap: " + paramMap);
+
+        // 사용자가 반환된 정보를 확인하여 이메일 주소가 있는지 확인
+        String memberEmail = (String) paramMap.get("email");
+        if (memberEmail == null) {
+            log.error("Google OAuth2 response does not contain an email address");
+            throw new IllegalArgumentException("Google OAuth2 response does not contain an email address");
+        }
+
+        log.info("Google 이메일 : " + memberEmail);
+        return memberEmail;
+    }
+    }

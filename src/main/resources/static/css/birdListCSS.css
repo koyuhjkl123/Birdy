@@ -1,0 +1,160 @@
+#back_m {
+background-image: linear-gradient(to left top, #d0d1cb, #d4d8d1, #d7e0d9, #d9e8e2, #dcefec, #d7ebea, #d2e8e8, #cde4e6, #bed5d6, #aec7c7, #a0b8b7, #91aaa8);    background-attachment: fixed;
+    /* 백그라운드는 항상 똑같이 보이도록 고정 */
+    overflow: scroll;
+    /* 페이지를 넘어가면 스크롤하기 */
+}
+
+/* 앨범 영역 전체 감싼 div */
+.wrap {
+    position: relative;
+    /* 포지션의 기준점 */
+    display: flex;
+    flex-direction: row;
+    flex-flow: wrap;
+    justify-content: space-evenly;
+    /* 가로정렬, 넘어가면 다음줄로 넘기기, 요소와 끝 간격 모두 동일하게 */
+    padding: 0 20px;
+}
+
+/* 머릿말 부분 배경 */
+/* 기본_텃새 */
+.h_container{
+    background: url(/pic_bird/h3.jpg);
+    background-size: 100% 500px;
+    /* 영역 안에 항상 사진 전체가 가득차도록 사이즈 조절 */
+    width: 100%;
+    height: 500px;
+    padding: 0;
+    font-size: large;
+    /* 글씨 좀 더 크게.. */
+    margin-bottom: 50px;
+    /* 다른요소와 margin으로 간격조절 */
+    z-index: -1;
+    /* 혹시 모르니..요소의 우선순위 가장 뒤로 빼두기 */
+}
+/* 철새 */
+#bird_m{
+    background: url(/pic_bird/h1.jpg);
+    background-size: 100% 500px;
+}
+
+/* 머릿말 내용부분 */
+#bird_ps {
+    float: left;
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(to right, rgb(255, 255, 255, 1), rgba(255, 255, 255, 0.7), rgb(255, 255, 255, 0.0));
+    /* 뒷배경 흐리게 */
+    backdrop-filter: blur(5px);
+    padding-left:5%;
+}
+#bird_pss {
+    margin: 200px 20px;
+}
+
+/* 앨범 하나씩의 단락(공통이름) */
+.container_box {
+    width: 300px;
+    height: 500px;
+    text-align: center;
+    border-radius: 32px;
+    box-shadow: 0px 0px 10px rgb(151, 151, 151);
+    background: white;
+    margin: 30px;
+    /* 모든 동작에 1초의 전환시간 부여 */
+    transition: all 1s;
+    /* 필터 살짝만 넣어서 색감 낮추기 */
+    filter: grayscale(.6);
+    animation: motion 1s linear 0s
+        /* 처음부터 끝까지 일정 속도로 진행 */
+        alternate;
+    /* 첫 로딩때에만 애니메이션 적용 */
+}
+
+@keyframes motion {
+    0% {
+        filter: grayscale(1.0);
+        border-radius: 0;
+    }
+
+    80% {
+        filter: grayscale(0.6);
+    }
+}
+
+/* 사진 */
+.container_box .pic_bird {
+    margin: auto;
+    width: 95%;
+    height: 300px;
+    top: 10px;
+    border-radius: 24px;
+    position: relative;
+}
+
+
+/* 박스에 마우스 올라가면 동작 */
+.container_box:hover {
+    transition: all 800ms;
+    filter: grayscale(0.0);
+    transform: scale(1.2);
+    z-index: 1;
+    background: white;
+}
+
+/* 새 이름 */
+.container_box h3 {
+    padding: 20px 0 0 30px;
+    float: left;
+    font-size: 20px;
+}
+
+/* 하트 이모티콘 */
+.fa-heart {
+    float: right;
+    padding: 45px 30px 0 0;
+    font-size: 15px;
+    color: black;
+}
+
+/* 마우스 올리면 초록색으로 조금 커지게 동작 */
+.fa-heart:hover {
+    /* transform: scale(1.5); */
+    text-shadow: 0px 0px 10px green;
+    color: green;
+}
+
+/* 클릭하는 순간에 흰색으로 변환 */
+.fa-heart:active {
+    color: white;
+}
+
+/* 클릭되고 나면 초록색으로 고정(함수 사용으로 아이콘 자체가 바뀜) */
+.fa-heart.fa-solid {
+    color: green;
+}
+
+/* 마우스 올리면 흰 그림자 */
+.text:hover {
+    transform: scale(1.2);
+    box-shadow: 0px 0px 10px white;
+}
+
+/* 새 설명 */
+.container_box p {
+    margin: 0 auto;
+    width: 80%;
+    height: 30%;
+    overflow-x: hidden;
+    /* 영역 벗어나면 세로 스크롤만 나타내기 */
+    text-align: center;
+    font-size: 15px;
+    line-height: 20px;
+    /* 줄 간격 */
+    padding: 10px;
+    top: 10%;
+    left: 9%;
+    border-radius: 10px;
+    background: linear-gradient(to bottom, rgba(222, 222, 222, 0.4), 95%,gray);
+}
