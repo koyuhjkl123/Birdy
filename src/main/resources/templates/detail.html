@@ -7,13 +7,11 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script th:src="@{/js/board_comment.js}"></script>
+    <!-- <script th:src="@{/js/board_list.js}"></script> -->
 </head>
 
 
-
     <div layout:fragment="content">
-
-
       <table>
         <tr>
           <th>id</th>
@@ -49,10 +47,9 @@
           </td>
         </tr>
       </table>
-      <button onclick="listReq()">목록</button>
-      <button onclick="updateReq()">수정</button>
-      <button onclick="deleteReq()">삭제</button>
-      
+      <a href="/board/list" class="btn btn-primary">목록</a>
+      <a th:href="@{/board/update/{id}(id=${boardDTO.id})}" class="btn btn-secondary">수정</a>
+      <button class="btn btn-danger" id="board-delete">삭제</button>
       
       <div class="card m-2" id="comments-new">
         

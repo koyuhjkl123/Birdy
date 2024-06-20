@@ -127,4 +127,33 @@ public class BoardController {
         return "detail";
     }
 
+
+    @GetMapping("update/{boardid}")
+    public String boardUpdate(@PathVariable("boardid") Long boardId,Model model){
+
+        System.out.println("수정 컨트롤러왔음");
+        // List<CommentDTO> commentDTOs = commentService.getBoardComment(boardId);
+        BoardDTO boardDTO = boardService.getOneBoard(boardId);
+        // model.addAttribute("commentDTOs", commentDTOs);
+        model.addAttribute("boardDTO", boardDTO);
+
+        return "update";
+    }
+
+    @DeleteMapping("delete/{boardid}")
+    public String boardDelete(@PathVariable("boardid") Long boardId,Model model){
+
+        System.out.println("수정 컨트롤러왔음");
+        // List<CommentDTO> commentDTOs = commentService.getBoardComment(boardId);
+        BoardDTO boardDTO = boardService.getOneBoard(boardId);
+        // model.addAttribute("commentDTOs", commentDTOs);
+        model.addAttribute("boardDTO", boardDTO);
+
+        return "update";
+    }
+
+
+
+
+
 }

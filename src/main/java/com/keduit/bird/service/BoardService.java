@@ -30,11 +30,8 @@ public class BoardService {
     private final BoardImgRepository boardImgRepository;
 
     public Long insertBoard(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,String email) throws Exception {
-        System.out.println("등록 메서드 도착");
-        System.out.println("등록 메서드 boardDTO : " + boardDTO);
-        System.out.println("등록 메서드 boardImgFileList : " + boardImgFileList);
+  
         Member member = memberRepository.findByMemberEmail(email);
-        System.out.println("등록 메서드 email : " + member.getMemberEmail());
 
 //      컨트롤러에서 확인했지만 한번더 확인
         if(member == null){
@@ -74,18 +71,6 @@ public class BoardService {
         return boardDTOList;
     }
 
-//    public Page<BoardDTO> getBoardPage(Pageable pageable) {
-//        Page<Board> boardPage = boardRepository.findAll(pageable);
-//
-//        // Board 엔티티를 BoardDTO로 매핑하여 Page<BoardDTO>로 반환
-//        return boardPage.map(board -> new BoardDTO(
-//                board.getId(),
-//                board.getBoardTitle(),
-//                board.getMember().getMemberName(), // 예시: Board 엔티티에 Member가 있다고 가정
-//                board.getBoardCreatedTime(),
-//                board.getCount()
-//        ));
-//    }
 
 
 
@@ -142,7 +127,47 @@ public BoardDTO getOneBoard(Long boardId) {
 
 
 
+public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,String email) throws Exception {
+    Member member = memberRepository.findByMemberEmail(email);
+    Board board = boardRepository.findById(boardDTO.getId()).orElse(null);
+    BoardImg boardImg = boardImgRepository.findByBoardId(board.getId());
+    
+    if (member == null) {
+        throw new UsernameNotFoundException("회원가입을 해주시기 바랍니다");
+    }
 
+    if (board == null) {
+        throw new IllegalArgumentException("게시글을 찾을 수 없습니다");
+    }
+    if (boardImg != null) {
+        boardImgRepository.delete(boardImg);
+    }
+
+    //  작성자랑 수정자 비교 만약에 관리자라면 수정 가능
+    if(!board.getMember().getMemberEmail().equals(email) || member.getRole() != Role.ADMIN){
+        throw new SecurityException("해당 게시글을 수정할 권한이 없습니다.");
+        }
+    // 게시글 정보를 업데이트
+    board.setMember(member);
+    board.setBoardTitle(boardDTO.getBoardTitle());
+    board.setBoardContent(boardDTO.getBoardContent());
+    boardRepository.save(board);
+    // 새 이미지를 저장합니다.
+    for (MultipartFile imgFile : boardImgFileList) {
+        BoardImg newBoardImg = new BoardImg();
+        newBoardImg.setBoard(board);
+        boardImgService.saveCommunityImg(newBoardImg, imgFile); }
+
+    }
+
+   
 
 
 }
+
+
+
+
+
+
+
