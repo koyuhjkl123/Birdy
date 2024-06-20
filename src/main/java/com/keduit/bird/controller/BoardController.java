@@ -129,26 +129,56 @@ public class BoardController {
 
 
     @GetMapping("update/{boardid}")
-    public String boardUpdate(@PathVariable("boardid") Long boardId,Model model){
+    public String boardUpdateForm(@PathVariable("boardid") Long boardId,Model model){
 
-        System.out.println("수정 컨트롤러왔음");
-        // List<CommentDTO> commentDTOs = commentService.getBoardComment(boardId);
+        System.out.println("수정 페이지 이동");
         BoardDTO boardDTO = boardService.getOneBoard(boardId);
-        // model.addAttribute("commentDTOs", commentDTOs);
         model.addAttribute("boardDTO", boardDTO);
 
         return "update";
     }
 
-    @DeleteMapping("delete/{boardid}")
-    public String boardDelete(@PathVariable("boardid") Long boardId,Model model){
 
-        System.out.println("수정 컨트롤러왔음");
-        // List<CommentDTO> commentDTOs = commentService.getBoardComment(boardId);
+    @PutMapping("/update/{boardid}")
+    public ResponseEntity<String> boardUpdate(@PathVariable("boardid") Long boardId,
+                                              @RequestParam("boardTitle") String title,
+                                              @RequestParam("boardContent") String content,
+                                              @RequestParam("boardImgFile") List<MultipartFile> imgFiles,
+                                              Principal principal) {
+        System.out.println("수정컨트롤러 도착");
+        String email = principal.getName();
+        Member member = memberRepository.findByMemberEmail(email);
+        if (member == null) {
+            return new ResponseEntity<>("데이터베이스에 없는 회원입니다.", HttpStatus.NOT_FOUND);
+        }
+    
+        BoardDTO boardDTO = new BoardDTO();
+        boardDTO.setId(boardId); 
+        boardDTO.setBoardTitle(title);
+        boardDTO.setBoardContent(content);
+        boardDTO.setEmail(email);
+    
+        try {
+            System.out.println("수정컨트롤러 try");
+            boardService.boardUpdate(boardDTO, imgFiles, email);
+        } catch (Exception e) {
+            return new ResponseEntity<>("게시물을 수정하는 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    
+        return new ResponseEntity<>("게시물이 성공적으로 수정되었습니다.", HttpStatus.OK);
+    }
+    
+
+
+    @DeleteMapping("/delete/{boardid}")
+    public String boardDelete(@PathVariable("boardid") Long boardId,
+                              @RequestBody Map<String, String> requestData,
+                              Model model){
+        // Incomplete implementation for board deletion
+        // Typically, this method should handle deletion logic and return appropriate response
+        System.out.println("삭제 컨트롤러왔음");
         BoardDTO boardDTO = boardService.getOneBoard(boardId);
-        // model.addAttribute("commentDTOs", commentDTOs);
         model.addAttribute("boardDTO", boardDTO);
-
         return "update";
     }
 

@@ -128,6 +128,8 @@ public BoardDTO getOneBoard(Long boardId) {
 
 
 public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,String email) throws Exception {
+    System.out.println("서비스 업데이트 도착");
+    System.out.println("서비스 업데이트 boardDTO"+boardDTO.toString());
     Member member = memberRepository.findByMemberEmail(email);
     Board board = boardRepository.findById(boardDTO.getId()).orElse(null);
     BoardImg boardImg = boardImgRepository.findByBoardId(board.getId());

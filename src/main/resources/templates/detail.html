@@ -7,7 +7,7 @@
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script th:src="@{/js/board_comment.js}"></script>
-    <!-- <script th:src="@{/js/board_list.js}"></script> -->
+    <script th:src="@{/js/board_delete.js}"></script>
 </head>
 
 
@@ -50,6 +50,7 @@
       <a href="/board/list" class="btn btn-primary">목록</a>
       <a th:href="@{/board/update/{id}(id=${boardDTO.id})}" class="btn btn-secondary">수정</a>
       <button class="btn btn-danger" id="board-delete">삭제</button>
+      <input type="hidden" th:value="${boardDTO.id}" id="boardId">
       
       <div class="card m-2" id="comments-new">
         
@@ -68,6 +69,7 @@
                 <button type="submit" class="btn btn-outline-primary btn-sm" id="comment-create-btn">댓글 작성</button>
             </div>
         </form>
+
 
         <div th:each="comment : ${commentDTOs}" id="comments-list">
           <div class="card m-2" th:id="'comments-' + ${comment.id}">

@@ -11,11 +11,11 @@ $(document).ready(function() {
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
         var formData = new FormData(this);
-        const requestData = {
-            "title": title,
-            "content": content,
-            "img": img
-        };
+        // const requestData = {
+        //     "title": title,
+        //     "content": content,
+        //     "img": img
+        // };
         // AJAX 요청 보내기
         $.ajax({
             url: "/board/save", // boardCommunityId를 URL에 포함시킴
