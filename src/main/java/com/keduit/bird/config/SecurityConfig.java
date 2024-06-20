@@ -43,7 +43,7 @@ public class SecurityConfig{
 
         http.authorizeRequests()
                 // 특정 경로에 대한 접근 권한을 설정
-                .mvcMatchers("/", "/members/**","/bird/**", "/images/**", "/intro/**", "favicon.ico", "error", "/member/**")
+                .mvcMatchers("/", "/members/**","/bird/**", "/images/**", "/css/**", "/intro/**", "favicon.ico", "error", "/member/**")
                 // 접근 가능한 경로를 지정
                 .permitAll()
                 // 앞서 작성한 경로는 누구나 접근 가능하도록 All 설정
