@@ -107,7 +107,6 @@ public BoardDTO getOneBoard(Long boardId) {
     BoardImg boardImg = boardImgRepository.findByBoardId(boardId);
 
     // 게시글 내용이 있다면
-    
     if (board != null) {
         boardDTO.setId(boardId);
         boardDTO.setBoardTitle(board.getBoardTitle());
@@ -117,6 +116,7 @@ public BoardDTO getOneBoard(Long boardId) {
         boardDTO.setUpdateTime(board.getBoardUpDatedTime());
         if (boardImg != null) {
             boardDTO.setImgUrl(boardImg.getImgUrl());
+            boardDTO.setOriImgName(boardImg.getOriImgName());
         }
     // 게시글이 없다면
     } else {
@@ -163,6 +163,7 @@ public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,
     }
 
    
+
 
 
 }

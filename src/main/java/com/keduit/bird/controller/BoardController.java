@@ -139,11 +139,10 @@ public class BoardController {
     }
 
 
-    @PutMapping("/update/{boardid}")
-    public ResponseEntity<String> boardUpdate(@PathVariable("boardid") Long boardId,
-                                              @RequestParam("boardTitle") String title,
-                                              @RequestParam("boardContent") String content,
-                                              @RequestParam("boardImgFile") List<MultipartFile> imgFiles,
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateBoard(@PathVariable Long id,
+                                              @ModelAttribute BoardDTO boardDTO,
+                                              @RequestParam("boardImgFile") List<MultipartFile> boardImgFile,
                                               Principal principal) {
         System.out.println("수정컨트롤러 도착");
         String email = principal.getName();
@@ -151,20 +150,21 @@ public class BoardController {
         if (member == null) {
             return new ResponseEntity<>("데이터베이스에 없는 회원입니다.", HttpStatus.NOT_FOUND);
         }
-    
-        BoardDTO boardDTO = new BoardDTO();
-        boardDTO.setId(boardId); 
-        boardDTO.setBoardTitle(title);
-        boardDTO.setBoardContent(content);
-        boardDTO.setEmail(email);
-    
         try {
+            if (boardDTO.isDeleteImg()) {
+                // 이미지 삭제 체크박스가 선택된 경우
+                boardDTO.setImgUrl(null);
+                boardDTO.setOriImgName(null);
+                // 서버에서 기존 이미지 파일을 삭제하는 로직을 추가하세요.
+            } 
+
+
+            
             System.out.println("수정컨트롤러 try");
-            boardService.boardUpdate(boardDTO, imgFiles, email);
+            boardService.boardUpdate(boardDTO, boardImgFile, email);
         } catch (Exception e) {
             return new ResponseEntity<>("게시물을 수정하는 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    
         return new ResponseEntity<>("게시물이 성공적으로 수정되었습니다.", HttpStatus.OK);
     }
     
