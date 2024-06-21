@@ -30,7 +30,7 @@
         <!-- 파일 입력 -->
         <div class="custom-file img-div">
             <input type="file" class="custom-file-input" name="boardImgFile" id="boardImgFile" th:if="${boardDTO.imgUrl}">
-            <label class="custom-file-label" for="boardImgFile" th:text="${boardDTO.oriImgName != null} ? ${boardDTO.oriImgName} : ''"></label>
+            <label class="custom-file-label" for="boardImgFile"></label>
         </div>
         
         <!-- 기존 이미지 정보를 숨겨진 필드로 포함 -->

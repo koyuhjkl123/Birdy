@@ -127,40 +127,54 @@ public BoardDTO getOneBoard(Long boardId) {
 
 
 
-public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,String email) throws Exception {
+public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList, String email) throws Exception {
     System.out.println("서비스 업데이트 도착");
-    System.out.println("서비스 업데이트 boardDTO"+boardDTO.toString());
+    System.out.println("서비스 업데이트 boardDTO" + boardDTO.toString());
+    System.out.println("서비스 업데이트 boardImgFileList++++" + boardImgFileList.isEmpty());
     Member member = memberRepository.findByMemberEmail(email);
     Board board = boardRepository.findById(boardDTO.getId()).orElse(null);
     BoardImg boardImg = boardImgRepository.findByBoardId(board.getId());
-    
+
     if (member == null) {
         throw new UsernameNotFoundException("회원가입을 해주시기 바랍니다");
     }
-
     if (board == null) {
         throw new IllegalArgumentException("게시글을 찾을 수 없습니다");
     }
-    if (boardImg != null) {
-        boardImgRepository.delete(boardImg);
+    
+    // 작성자와 수정자 비교, 관리자라면 수정 가능
+    if (!board.getMember().getMemberEmail().equals(email) && member.getRole() != Role.ADMIN) {
+        throw new SecurityException("해당 게시글을 수정할 권한이 없습니다.");
     }
 
-    //  작성자랑 수정자 비교 만약에 관리자라면 수정 가능
-    if(!board.getMember().getMemberEmail().equals(email) || member.getRole() != Role.ADMIN){
-        throw new SecurityException("해당 게시글을 수정할 권한이 없습니다.");
+    // 이미지 삭제 로직
+    if (boardDTO.isDeleteImg() && boardImg != null) {
+        System.out.println("이미지 삭제 조건문");
+        boardImgRepository.delete(boardImg);
+        boardDTO.setImgUrl(null);
+        boardDTO.setOriImgName(null);
+    } 
+    // 새로운 이미지 파일이 업로드된 경우
+    else if (!boardImgFileList.isEmpty()) {
+        System.out.println("이미지 파일 리스트가 비어 있지 않음");
+        // 기존 이미지 삭제 및 새로운 이미지 저장
+        if (boardImg != null) {
+            System.out.println("기존 이미지 삭제");
+            boardImgRepository.delete(boardImg);
         }
+        for (int i = 0; i < boardImgFileList.size(); i++) {
+            BoardImg BoardImg = new BoardImg();
+            BoardImg.setBoard(board);
+            boardImgService.saveCommunityImg(BoardImg, boardImgFileList.get(i));
+        }
+    }
+
     // 게시글 정보를 업데이트
     board.setMember(member);
     board.setBoardTitle(boardDTO.getBoardTitle());
     board.setBoardContent(boardDTO.getBoardContent());
     boardRepository.save(board);
-    // 새 이미지를 저장합니다.
-    for (MultipartFile imgFile : boardImgFileList) {
-        BoardImg newBoardImg = new BoardImg();
-        newBoardImg.setBoard(board);
-        boardImgService.saveCommunityImg(newBoardImg, imgFile); }
-
-    }
+}
 
    
 

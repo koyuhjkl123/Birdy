@@ -27,6 +27,7 @@ public class BoardDTO {
     private String oriImgName;
     private boolean deleteImg; 
 
+
     public BoardDTO(Long id, String boardTitle, String nickName, LocalDateTime regTime, int count) {
         this.id = id;
         this.boardTitle = boardTitle;
