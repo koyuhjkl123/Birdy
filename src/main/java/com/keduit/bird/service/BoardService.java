@@ -141,18 +141,15 @@ public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,
     if (board == null) {
         throw new IllegalArgumentException("게시글을 찾을 수 없습니다");
     }
-    
     // 작성자와 수정자 비교, 관리자라면 수정 가능
     if (!board.getMember().getMemberEmail().equals(email) && member.getRole() != Role.ADMIN) {
         throw new SecurityException("해당 게시글을 수정할 권한이 없습니다.");
     }
 
     // 이미지 삭제 로직
-    if (boardDTO.isDeleteImg() && boardImg != null) {
+    if (boardDTO.isDeleteImg()) {
         System.out.println("이미지 삭제 조건문");
         boardImgRepository.delete(boardImg);
-        boardDTO.setImgUrl(null);
-        boardDTO.setOriImgName(null);
     } 
     // 새로운 이미지 파일이 업로드된 경우
     else if (!boardImgFileList.isEmpty()) {

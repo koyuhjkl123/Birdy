@@ -145,6 +145,8 @@ public class BoardController {
                                               @RequestParam("boardImgFile") List<MultipartFile> boardImgFile,
                                               Principal principal) {
         System.out.println("수정컨트롤러 도착" + boardDTO.toString());
+        System.out.println("수정 컨트롤러 사이즈"+boardImgFile.size());
+        System.out.println("수정 컨트롤러"+boardImgFile.isEmpty());
         String email = principal.getName();
         Member member = memberRepository.findByMemberEmail(email);
         if (member == null) {
