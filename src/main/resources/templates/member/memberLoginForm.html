@@ -11,6 +11,7 @@
             .error{
                 color: #bd2130;
             }
+            .social{ padding: 10px; }
         </style>
 
     <!--사용자 스크립트 추가-->
@@ -45,9 +46,19 @@
         </div>
 
         <!--카카오 로그인-->
-        <div class="input-group md-3">
-            <a href="/oauth2/authorization/kakao">kakao login</a>
-        </div>
+        <div class="input-group md-3 social">
+            <a href="/oauth2/authorization/kakao">
+                <img th:src="@{/images/kakao_logo.jpg}" class="img-fluid mb-3" alt="kakao">
+            </a>
+<!-- 네이버 로그인 -->
+            <a href="/oauth2/authorization/naver">
+                <img th:src="@{/images/naver_icon.png}" class="img-fluid mb-3" alt="naver">
+            </a>
+<!-- 구글 로그인 -->
+<!--            <a href="/oauth2/authorization/google">-->
+<!--                <img src="/images/Google_logo.png" class="img-fluid mb-3" alt="google">-->
+<!--            </a>-->
+<!--        </div>-->
 
         <div>
         <p th:if="${loginErrorMsg}"

@@ -5,16 +5,33 @@
 
 <th:block layout:fragment="css">
     <style th:inline="css">
-
-    <!-- 사용자 css 추가 -->
-    <style>
         .fieldError {
             color: #bd2130;
+        }
+        .content{
+        text-align:center;
+        padding:50px;
+        }
+        .content-body{
+            border: 1px solid;
+            border-radius:20px;
+            width: 75%;
+            margin: 0 auto;
+            padding: 10px;
+            background-image: linear-gradient(to right top, #b8dbce, #b7d7cc, #b6d3ca, #b6cec8, #b5cac5, #b7c9c5, #b8c9c4, #bac8c4, #becbc7, #c2cdc9, #c5d0cc, #c9d3cf);
+        }
+
+        .form-group img{
+        border: 2px solid gray;
+        border-radius:50%;
+        }
+        .form-group p{
+        color:black;
         }
     </style>
 </th:block>
 <th:block layout:fragment="script">
-<!--사용자 스크립트 추가-->
+    <!--사용자 스크립트 추가-->
     <script th:inline="javascript">
         $(document).ready(function(){
             const errorMessage = [[${errorMessage}]];
@@ -29,51 +46,52 @@
 <div layout:fragment="content">
     <p>
         <a th:href="@{/myPage/myPage_main}" class="btn btn-secondary me-2">MyPage_Main</a>
-        <a th:href="@{/myPage/boardList}" class="btn btn-secondary me-2">My board List</a>
-        <a th:href="@{/myPage/reple}" class="btn btn-secondary me-2">My comment</a>
+        <a th:href="@{/myPage/boardList}" class="btn btn-secondary me-2">My List</a>
+        <a th:href="@{/myPage/comment}" class="btn btn-secondary me-2">My Comment</a>
     </p>
-
-<div class="row">
-    <div class="col-12">
-        <div class="form-group">
-            <p>프로필 이미지:</p>
-            <img th:src="@{'/myPage/profile/' + ${member.memberEmail}}" style="max-width: 200px;" alt="프로필 이미지"/>
-        </div>
-    </div>
-</div>
-
-    <div class="row">
-        <div class="col-6">
-            <div class="form-group">
-                <p>회원번호 : <span th:text="${member.id}"></span></p>
+    <div class="content-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <p>프로필 이미지:</p>
+                    <img th:src="@{'/myPage/profile/' + ${member.memberEmail}}" style="max-width: 200px;" alt="프로필 이미지"/>
+                </div>
             </div>
         </div>
-        <div class="col-6">
-            <div class="form-group">
-                <p>이름 : <span th:text="${member.memberName}"></span></p>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-group">
-                <p>이메일 : <span th:text="${member.memberEmail}"></span></p>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-group">
-                <p>연락처 : <span th:text="${member.memberPhone}"></span></p>
-            </div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12">
-            <a th:href="@{update}" class="btn btn-secondary me-2">수정하기</a>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <p>회원번호 : <span th:text="${member.id}"></span></p>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <p>이름 : <span th:text="${member.memberName}"></span></p>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <p>이메일 : <span th:text="${member.memberEmail}"></span></p>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <p>연락처 : <span th:text="${member.memberPhone}"></span></p>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12">
-            <a th:href="@{memberStop}" class="btn btn-secondary me-2">탈퇴하기</a>
+        <div class="row">
+            <div class="col-12">
+                <a th:href="@{update}" class="btn btn-secondary me-2">수정하기</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <a th:href="@{memberStop}" class="btn btn-secondary me-2">탈퇴하기</a>
+            </div>
         </div>
     </div>
 </div>
