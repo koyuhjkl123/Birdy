@@ -170,20 +170,23 @@ public class BoardController {
         }
         return new ResponseEntity<>("게시물이 성공적으로 수정되었습니다.", HttpStatus.OK);
     }
-    
-    
 
 
     @DeleteMapping("/delete/{boardid}")
-    public String boardDelete(@PathVariable("boardid") Long boardId,
-                              @RequestBody Map<String, String> requestData,
-                              Model model){
-        // Incomplete implementation for board deletion
-        // Typically, this method should handle deletion logic and return appropriate response
-        System.out.println("삭제 컨트롤러왔음");
-        BoardDTO boardDTO = boardService.getOneBoard(boardId);
-        model.addAttribute("boardDTO", boardDTO);
-        return "update";
+    public ResponseEntity<String> boardDelete(@PathVariable("boardid") Long boardId,
+                              @RequestBody Map<String, String> requestData,Principal principal){
+
+        try {
+            System.out.println("삭제 컨트롤러왔씀");
+            System.out.println("삭제 boardId"+boardId);
+
+            String email = principal.getName();
+            boardService.boardDelete(boardId, email);
+        } catch (Exception e) {
+            // alert에서 뜨는 메세지는 서비스에서 구현
+            return new ResponseEntity<>("게시물을 수정하는 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>("게시물이 성공적으로 수정되었습니다.", HttpStatus.OK);
     }
 
 

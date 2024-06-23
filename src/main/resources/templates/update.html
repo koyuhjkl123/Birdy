@@ -18,7 +18,7 @@
         <div class="form-group" th:if="${boardDTO.imgUrl}">
             <label>기존 이미지:</label>
             <div class="img-preview">
-                <img th:src="@{${boardDTO.imgUrl}}" alt="현재 이미지" style="max-width: 300px; max-height: 300px;">
+                <img th:src="@{|/images/${boardDTO.fileName}|}" alt="사진">
             </div>
             <!-- 이미지 삭제 체크박스 -->
             <div>

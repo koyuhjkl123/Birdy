@@ -26,6 +26,7 @@ public class BoardDTO {
     private String imgUrl;
     private String oriImgName;
     private boolean deleteImg; 
+    private String fileName;
 
 
     public BoardDTO(Long id, String boardTitle, String nickName, LocalDateTime regTime, int count) {

@@ -109,11 +109,13 @@ public BoardDTO getOneBoard(Long boardId) {
     // 게시글 내용이 있다면
     if (board != null) {
         boardDTO.setId(boardId);
+        boardDTO.setEmail(board.getMember().getMemberEmail());
         boardDTO.setBoardTitle(board.getBoardTitle());
         boardDTO.setBoardContent(board.getBoardContent());
         boardDTO.setNickName(board.getMember().getMemberName()); 
         boardDTO.setRegTime(board.getBoardCreatedTime());
         boardDTO.setUpdateTime(board.getBoardUpDatedTime());
+        boardDTO.setFileName(boardImg.getImgName());
         if (boardImg != null) {
             boardDTO.setImgUrl(boardImg.getImgUrl());
             boardDTO.setOriImgName(boardImg.getOriImgName());
@@ -173,6 +175,29 @@ public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,
     boardRepository.save(board);
 }
 
+
+
+
+public void boardDelete(Long boardId, String email) {
+    // boardId와 email로 보드를 찾습니다.
+    Board board = boardRepository.findById(boardId).orElse(null);
+    Member member = memberRepository.findByMemberEmail(email);
+    BoardImg boardImg = boardImgRepository.findByBoardId(boardId);
+    if (member == null) {
+        throw new UsernameNotFoundException("회원가입을 해주시기 바랍니다");
+    }
+    if (board == null) {
+        throw new IllegalArgumentException("게시글을 찾을 수 없습니다");
+    }
+       // 작성자와 수정자 비교, 관리자라면 수정 가능
+    if (!board.getMember().getMemberEmail().equals(email) && member.getRole() != Role.ADMIN) {
+        throw new SecurityException("해당 게시글을 수정할 권한이 없습니다.");
+    }
+    /// 게시글 삭제
+    boardRepository.delete(board);
+    // 이미지삭제
+    boardImgRepository.delete(boardImg);
+}
    
 
 
