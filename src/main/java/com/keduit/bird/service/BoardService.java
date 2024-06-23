@@ -151,8 +151,8 @@ public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,
         System.out.println("이미지 삭제 조건문");
         boardImgRepository.delete(boardImg);
     } 
-    // 새로운 이미지 파일이 업로드된 경우
-    else if (!boardImgFileList.isEmpty()) {
+    // 하나의 이미지만 받아서 첫번쨰 자리로 해결  boardImgFileList.isEmty() 파일 존재 자체 유무를 판단한다고함.
+    else if (!boardImgFileList.get(0).isEmpty()) {
         System.out.println("이미지 파일 리스트가 비어 있지 않음");
         // 기존 이미지 삭제 및 새로운 이미지 저장
         if (boardImg != null) {

@@ -145,8 +145,18 @@ public class BoardController {
                                               @RequestParam("boardImgFile") List<MultipartFile> boardImgFile,
                                               Principal principal) {
         System.out.println("수정컨트롤러 도착" + boardDTO.toString());
-        System.out.println("수정 컨트롤러 사이즈"+boardImgFile.size());
-        System.out.println("수정 컨트롤러"+boardImgFile.isEmpty());
+   // 파일의 사이즈를 출력
+        System.out.println("파일 사이즈: " + boardImgFile.get(0).getSize() + " bytes");
+        // 파일의 원본 이름을 출력
+        System.out.println("원본 파일 이름: " + boardImgFile.get(0).getOriginalFilename());
+        // 파일의 콘텐츠 타입을 출력
+        System.out.println("파일 콘텐츠 타입: " + boardImgFile.get(0).getContentType());
+        
+        // 파일의 저장 이름을 출력 (필요하다면)
+        System.out.println("파일 저장 이름: " + boardImgFile.get(0).getName());
+        // 존재 유무
+        System.out.println("비어있는 유무1"+boardImgFile.isEmpty());
+        System.out.println("비어있는 유무2"+boardImgFile.get(0).isEmpty());
         String email = principal.getName();
         Member member = memberRepository.findByMemberEmail(email);
         if (member == null) {
