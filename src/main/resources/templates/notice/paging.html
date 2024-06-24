@@ -1,20 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko" xmlns:th="https://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate='~{layouts/layout1}'>
-<th:block layout:fragment="css">
-    <style th:inline="css">
-        .fieldError {
-            color: #bd2130;
-        }
+
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <script th:src="@{/js/board/board_list.js}"></script>
+    <script th:src="@{/js/notice/board_list.js}"></script>
 </head>
 
 
     <div layout:fragment="content">
+        <h1>공지사항</h1>
         <form action="/board/list" method="GET">
             <select id="searchType" name="type">
                 <option value="titleAndContent">제목+내용</option>
@@ -67,6 +64,4 @@
             </ul>
         </div>
     </div>
-</div>
-
 </html>

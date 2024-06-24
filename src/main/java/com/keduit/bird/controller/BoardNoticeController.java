@@ -2,42 +2,33 @@ package com.keduit.bird.controller;
 
 import com.keduit.bird.constant.Role;
 import com.keduit.bird.dto.BoardDTO;
+import com.keduit.bird.dto.BoardNoticeDTO;
 import com.keduit.bird.dto.CommentDTO;
-import com.keduit.bird.entity.Board;
-import com.keduit.bird.entity.BoardComment;
+import com.keduit.bird.entity.BoardNotice;
 import com.keduit.bird.entity.Member;
 import com.keduit.bird.repository.MemberRepository;
-import com.keduit.bird.service.BoardService;
+import com.keduit.bird.service.BoardNoticeService;
 import com.keduit.bird.service.CommentService;
-import com.keduit.bird.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
-import org.hibernate.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/board")
-public class BoardController {
-    private final BoardService boardService;
-    private final CommentService commentService;
-    private final MemberService memberService;
+@RequestMapping("/notic")
+public class BoardNoticeController {
+    private final BoardNoticeService boardNoticeService;
     private final MemberRepository memberRepository;
 
     @GetMapping("/insertForm")
@@ -52,7 +43,7 @@ public class BoardController {
 //           정지된 사람도 다시 로그인 페이지로 이동
             return "/members/login";
         }
-        return "save";
+        return "notice/save";
     }
     //작성자를 해당 유저의 이름으로 자동적용시키기위해 코드 추가함.
 
@@ -67,12 +58,12 @@ public class BoardController {
         System.out.println("데이터베이스에 없는 회원입니다.");
          return new ResponseEntity<>("데이터베이스에 없는 회원입니다.", HttpStatus.NOT_FOUND);
     }
-    BoardDTO boardDTO = new BoardDTO();
+    BoardNoticeDTO boardDTO = new BoardNoticeDTO();
     boardDTO.setBoardTitle(title);
     boardDTO.setBoardContent(content);
     boardDTO.setEmail(email);
     try {
-        boardService.insertBoard(boardDTO, imgFiles, email);
+        boardNoticeService.insertBoard(boardDTO, imgFiles, email);
     } catch (Exception e) {
         System.out.println("게시물을 저장하는 중 오류가 발생했습니다: " + e.getMessage());
         return new ResponseEntity<>("게시물을 저장하는 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,7 +82,7 @@ public class BoardController {
                             Model model){
         String search = "";
         Pageable pageable = PageRequest.of(page, size);
-        Page<Board> boardPage = boardService.getBoardPage(pageable, type, keyword);
+        Page<BoardNotice> boardPage = boardNoticeService.getBoardPage(pageable, type, keyword);
 
         if ("titleAndContent".equals(type)) {
             search = "제목+내용";
@@ -108,23 +99,17 @@ public class BoardController {
         model.addAttribute("search", search);
         model.addAttribute("keyword", keyword);
         model.addAttribute("boardPage", boardPage);
-        return "paging";
+        return "notice/paging";
     }
     
 
     @GetMapping("/{id}")
     public String oneBoard(@PathVariable("id") Long boardId,Model model){
 
-        System.out.println("하나조회 컨트롤러왔음");
-        
-        List<CommentDTO> commentDTOs = commentService.getBoardComment(boardId);
-        BoardDTO boardDTO = boardService.getOneBoard(boardId);
-
-
-        model.addAttribute("commentDTOs", commentDTOs);
+        BoardNoticeDTO boardDTO = boardNoticeService.getOneBoard(boardId);
         model.addAttribute("boardDTO", boardDTO);
 
-        return "detail";
+        return "notice/detail";
     }
 
 
@@ -132,10 +117,10 @@ public class BoardController {
     public String boardUpdateForm(@PathVariable("boardid") Long boardId,Model model){
 
         System.out.println("수정 페이지 이동");
-        BoardDTO boardDTO = boardService.getOneBoard(boardId);
+        BoardNoticeDTO boardDTO = boardNoticeService.getOneBoard(boardId);
         model.addAttribute("boardDTO", boardDTO);
 
-        return "update";
+        return "notice/update";
     }
 
 
@@ -164,7 +149,7 @@ public class BoardController {
         }
         try {
             System.out.println("수정컨트롤러 try");
-            boardService.boardUpdate(boardDTO, boardImgFile, email);
+            boardNoticeService.boardUpdate(boardDTO, boardImgFile, email);
         } catch (Exception e) {
             return new ResponseEntity<>("게시물을 수정하는 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -181,14 +166,13 @@ public class BoardController {
             System.out.println("삭제 boardId"+boardId);
 
             String email = principal.getName();
-            boardService.boardDelete(boardId, email);
+            boardNoticeService.boardDelete(boardId, email);
         } catch (Exception e) {
             // alert에서 뜨는 메세지는 서비스에서 구현
             return new ResponseEntity<>("게시물을 수정하는 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("게시물이 성공적으로 수정되었습니다.", HttpStatus.OK);
     }
-
 
 
 

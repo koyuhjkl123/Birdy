@@ -53,7 +53,8 @@
                     </li>
                     <li sec:authorize="hasAnyAuthority('ROLE_MEMBER', 'ROLE_ADMIN')" class="nav-item"><a class="nav-link" th:href="@{/bird/birds}">새의 앨범</a></li>
                     <li sec:authorize="hasAnyAuthority('ROLE_MEMBER', 'ROLE_ADMIN')" class="nav-item"><a class="nav-link" th:href="@{/members/news}">과학 + 새</a></li>
-                    <li sec:authorize="hasAnyAuthority('ROLE_MEMBER', 'ROLE_ADMIN')" class="nav-item"><a class="nav-link" th:href="@{/board/paging}">게시판</a></li>
+                    <li sec:authorize="hasAnyAuthority('ROLE_MEMBER', 'ROLE_ADMIN')" class="nav-item"><a class="nav-link" th:href="@{/board/list}">게시판</a></li>
+                    <li sec:authorize="hasAnyAuthority('ROLE_MEMBER', 'ROLE_ADMIN')" class="nav-item"><a class="nav-link" th:href="@{/notice/list}">공지사항</a></li>
                     <li  class="nav-item"><a class="nav-link" th:href="@{/members/about}">About</a></li>
                     <li sec:authorize="hasAnyAuthority('ROLE_MEMBER', 'ROLE_ADMIN')" class="nav-item"><a class="nav-link" th:href="@{/bird/birdy}">새의 탐조</a></li>
                 </ul>

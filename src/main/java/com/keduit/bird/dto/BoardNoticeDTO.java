@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class BoardDTO {
+public class BoardNoticeDTO {
 
     private Long id;
     private String email; //
@@ -29,7 +29,7 @@ public class BoardDTO {
     private String fileName;
 
 
-    public BoardDTO(Long id, String boardTitle, String nickName, LocalDateTime regTime, int count) {
+    public BoardNoticeDTO(Long id, String boardTitle, String nickName, LocalDateTime regTime, int count) {
         this.id = id;
         this.boardTitle = boardTitle;
         this.nickName = nickName;
@@ -38,7 +38,7 @@ public class BoardDTO {
     }
 
 
-    public BoardDTO() {
+    public BoardNoticeDTO() {
 
     }
 }
