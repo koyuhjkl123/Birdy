@@ -41,17 +41,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> paramMap = oAuth2User.getAttributes();
+        log.info("OAuth2User Attributes: {}", paramMap);  // 전체 속성 출력
 
         String memberEmail = null;
         System.out.println(clientName + "########################");
-        switch(clientName){
+        switch (clientName) {
             case "kakao":
                 memberEmail = getKakaoEmail(paramMap);
                 break;
             case "naver":
                 memberEmail = getNaverEmail(paramMap);
                 break;
-            case "google":
+            case "Google":
                 memberEmail = getGoogleEmail(paramMap);
                 break;
         }
@@ -66,11 +67,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private MemberSecurityDTO generateDTO(String memberEmail, Map<String, Object> paramMap) {
         Member result = memberRepository.findByMemberEmail(memberEmail);
         System.out.println("*********" + result);
+        log.info("^^^^" + memberEmail);
 
-        if(result == null){
+        if (result == null) {
             //회원 추가
             Member member = new Member();
-            member.setMemberName("소셜로그인");
+            member.setMemberName("소셜");
             member.setMemberEmail(memberEmail);
             member.setMemberPwd(passwordEncoder.encode("0000"));
             member.setSocial(true);
@@ -79,36 +81,38 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             // MemberSecurityDTO 구성 및 반환 추가
             MemberSecurityDTO memberSecurityDTO = new MemberSecurityDTO(
-                    memberEmail, "0000",true,
+                    memberEmail, "0000", true,
                     Arrays.asList(new SimpleGrantedAuthority("ROLE_MEMBER"))
             );
             memberSecurityDTO.setProps(paramMap);
             return memberSecurityDTO;
-        }else{
+        } else {
             MemberSecurityDTO memberSecurityDTO = new MemberSecurityDTO(
-            result.getMemberEmail(),
-            result.getMemberPwd(),
-            result.isSocial(),
-            Arrays.asList(new SimpleGrantedAuthority("ROLE_MEMBER"))
+                    result.getMemberEmail(),
+                    result.getMemberPwd(),
+                    result.isSocial(),
+                    Arrays.asList(new SimpleGrantedAuthority("ROLE_MEMBER"))
             );
             return memberSecurityDTO;
         }
     }
+
     private String getKakaoEmail(Map<String, Object> paramMap) {
         log.info("======== 카카오 로그인 ============");
-        Object value=paramMap.get("kakao_account");
+        Object value = paramMap.get("kakao_account");
         log.info(value);
 
         //이메일 뽑아오기
-        LinkedHashMap accountMap = (LinkedHashMap)value;
-        String memberEmail = (String)accountMap.get("email");
+        LinkedHashMap accountMap = (LinkedHashMap) value;
+        String memberEmail = (String) accountMap.get("email");
         log.info("@@ = " + memberEmail);
         return memberEmail;
     }
+
     //네이버
     private String getNaverEmail(Map<String, Object> paramMap) {
         log.info("======== 네이버 로그인 ============");
-        Object value=paramMap.get("response");
+        Object value = paramMap.get("response");
         log.info("Response value: " + value);
 
 
@@ -132,16 +136,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     // 구글
     private String getGoogleEmail(Map<String, Object> paramMap) {
         log.info("======== 구글 로그인 ============");
-        log.info("paramMap: " + paramMap);
-
-        // 사용자가 반환된 정보를 확인하여 이메일 주소가 있는지 확인
         String memberEmail = (String) paramMap.get("email");
         if (memberEmail == null) {
             log.error("Google OAuth2 response does not contain an email address");
             throw new IllegalArgumentException("Google OAuth2 response does not contain an email address");
         }
-
         log.info("Google 이메일 : " + memberEmail);
         return memberEmail;
     }
-    }
+
+}
