@@ -20,6 +20,11 @@ public class BoardImg extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_id")
+    private BoardNotice boardNotice;
+
     public void updateBoardImg(String oriImgName, String imgName, String imgUrl) {
         this.oriImgName = oriImgName;
         this.imgName = imgName;
