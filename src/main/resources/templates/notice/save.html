@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate='~{layouts/layout1}'>
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script th:src="@{/js/notice/board_insert.js}"></script>
+</head>
+
+
+
+    <div layout:fragment="content">
+        <h1>공지사항</h1>
+        <form id="board-insert">
+            title: <input type="text" name="boardTitle"> <br>
+            contents: <textarea name="boardContent" cols="30" rows="10"></textarea> <br>
+            file: <input type="file" name="boardImgFile"> <br>
+            <input type="submit" value="글작성">
+        </form>
+    </div>
+</html>

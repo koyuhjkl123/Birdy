@@ -1,29 +1,27 @@
 package com.keduit.bird.repository;
 
-import com.keduit.bird.dto.BoardDTO;
-import com.keduit.bird.entity.BoardEntity;
-import com.keduit.bird.entity.Member;
+import com.keduit.bird.entity.Board;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-import java.util.Optional;
+public interface BoardRepository extends JpaRepository<Board, Long> {
 
-public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
-    @Modifying
-    @Query(value = "update BoardEntity b set b.boardHits=b.boardHits+1 where b.id=:id")
-    void updateHits(@Param("id") Long id);
+    Page<Board> findByBoardTitleContaining(@RequestParam("keyword") String keyword, Pageable pageable);
 
-    @Query("SELECT m.memberName FROM Member m WHERE m.memberEmail = :memberEmail")
-    Optional<String> findMemberNameByMemberEmail(@Param("memberEmail") String memberEmail);
-    //principal 을 통해 memberEmail 을 가져온다(getName)
+    Page<Board> findByBoardContentContaining(@RequestParam("keyword") String keyword, Pageable pageable);
 
-    List<BoardEntity> findByAdminBoardId(String adminBoardId);
+    @Query("SELECT b FROM Board b WHERE b.boardTitle LIKE %:keyword% OR b.boardContent LIKE %:keyword%")
+    Page<Board> findFilterBoard(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT b FROM Board b JOIN b.member m WHERE m.memberName LIKE %:memberName%")
+    Page<Board> findByMemberNameContaining(@Param("memberName") String memberName, Pageable pageable);
+
+
+    
 
 }
-
-

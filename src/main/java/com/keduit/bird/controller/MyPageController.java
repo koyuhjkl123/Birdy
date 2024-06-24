@@ -2,10 +2,8 @@ package com.keduit.bird.controller;
 
 import com.keduit.bird.dto.BoardDTO;
 import com.keduit.bird.dto.MemberFormDTO;
-import com.keduit.bird.entity.BoardEntity;
 import com.keduit.bird.entity.Member;
 import com.keduit.bird.entity.Profile;
-import com.keduit.bird.repository.BoardRepository;
 import com.keduit.bird.repository.MemberRepository;
 import com.keduit.bird.repository.ProfileRepository;
 import com.keduit.bird.service.BoardService;
@@ -188,17 +186,17 @@ public class MyPageController {
             .body(resource);
 }
 
-//내가 쓴 글
-@GetMapping("/boardList")
-    public String getList(Model model, Principal principal){
-        String memberEmail = principal.getName();
-        String memberName = memberRepository.findMemberNameByMemberEmail(memberEmail);
-        System.out.println("#뾰롱# " + memberName + " #여기# " + memberEmail);
-
-        List<BoardDTO> boardDTOList = boardService.findByAdminBoardId(memberName);
-//        List<BoardEntity> boardList = boardRepository.findByAdminBoardId(memberName);
-        model.addAttribute("boardList", boardDTOList);
-        return "myPage/boardList";
-}
+////내가 쓴 글
+//@GetMapping("/boardList")
+//    public String getList(Model model, Principal principal){
+//        String memberEmail = principal.getName();
+//        String memberName = memberRepository.findMemberNameByMemberEmail(memberEmail);
+//        System.out.println("#뾰롱# " + memberName + " #여기# " + memberEmail);
+//
+//        List<BoardDTO> boardDTOList = boardService.findByAdminBoardId(memberName);
+////        List<BoardEntity> boardList = boardRepository.findByAdminBoardId(memberName);
+//        model.addAttribute("boardList", boardDTOList);
+//        return "myPage/boardList";
+//}
 
 }
