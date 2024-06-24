@@ -1,12 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko" xmlns:th="https://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate='~{layouts/layout1}'>
-<th:block layout:fragment="css">
-    <style th:inline="css">
-        .fieldError {
-            color: #bd2130;
-        }
+
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -67,6 +63,4 @@
             </ul>
         </div>
     </div>
-</div>
-
 </html>
