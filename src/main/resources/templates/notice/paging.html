@@ -25,7 +25,7 @@
 
         <p th:if="${keyword}">
             <span th:text="${search}"></span> : <span th:text="${keyword}"></span> 검색 결과입니다</p>
-        <button onclick="saveReq()">글작성</button>
+        <a href="/notice/insertForm">글작성</a>
 
         <table id="resultsTable">
             <tr>
@@ -42,7 +42,7 @@
             <tr th:each="board: ${boardPage.content}">
                 <td th:text="${board.id}"></td>
                 <td >
-                    <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a>
+                    <a th:href="@{/notice/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a>
                 </td>
                 <td th:text="${board.member.memberName}"></td>
                 <td th:text="*{#temporals.format(board.BoardCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>

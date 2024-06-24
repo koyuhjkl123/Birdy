@@ -26,7 +26,7 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/notic")
+@RequestMapping("/notice")
 public class BoardNoticeController {
     private final BoardNoticeService boardNoticeService;
     private final MemberRepository memberRepository;
@@ -80,6 +80,7 @@ public class BoardNoticeController {
                              @RequestParam(required = false) String type,
                              @RequestParam(required = false) String keyword,
                             Model model){
+        System.out.println("공지사항페이지 이동 컨트롤러+++");
         String search = "";
         Pageable pageable = PageRequest.of(page, size);
         Page<BoardNotice> boardPage = boardNoticeService.getBoardPage(pageable, type, keyword);
@@ -105,10 +106,10 @@ public class BoardNoticeController {
 
     @GetMapping("/{id}")
     public String oneBoard(@PathVariable("id") Long boardId,Model model){
+        System.out.println("컨트롤러 왔음 공지사항 ");
 
         BoardNoticeDTO boardDTO = boardNoticeService.getOneBoard(boardId);
         model.addAttribute("boardDTO", boardDTO);
-
         return "notice/detail";
     }
 

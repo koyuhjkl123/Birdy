@@ -47,7 +47,7 @@ public class SecurityConfig{
                 // 접근 가능한 경로를 지정
                 .permitAll()
                 // 앞서 작성한 경로는 누구나 접근 가능하도록 All 설정
-                .mvcMatchers("/bird/**", "/member/**", "/myPage/**", "/", "/board/**", "/intro/**")
+                .mvcMatchers("/bird/**", "/member/**", "/myPage/**", "/", "/board/**", "/intro/**","/notice/**")
                 .hasAnyRole("MEMBER","ADMIN")
                 .mvcMatchers("/admin/**")
                 // "/admin/**" 경로에 대한 권한 설정

@@ -49,11 +49,13 @@ public class BoardNoticeService {
         notice.setBoardTitle(boardDTO.getBoardTitle());
         notice.setMember(member);
         boardNoticeRepository.save(notice);
+        if (!boardImgFileList.get(0).isEmpty()) {
         for (int i = 0; i < boardImgFileList.size(); i++) {
             BoardImg BoardImg = new BoardImg();
             BoardImg.setBoardNotice(notice);
             boardImgService.saveCommunityImg(BoardImg, boardImgFileList.get(i));
         }
+    }
         return notice.getId();
     }
     
@@ -102,7 +104,7 @@ public BoardNoticeDTO getOneBoard(Long boardId) {
     BoardNotice board = boardNoticeRepository.findById(boardId).orElse(null);
 
     // 이미지 찾기
-    BoardImg boardImg = boardImgRepository.findByBoardId(boardId);
+    BoardImg boardImg = boardImgRepository.findByBoardNoticeId(boardId);
 
     // 게시글 내용이 있다면
     if (board != null) {
