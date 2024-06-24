@@ -5,15 +5,19 @@
 <meta name="_csrf" th:content="${_csrf.token}"/>
 
 <th:block layout:fragment="css">
-<!--사용자 css 추가-->
+    <!--사용자 css 추가-->
     <style th:inline="css">
         .fieldError{
             color: #bd2130;
         }
+           .content{
+        margin: 0 auto;
+            width: 75%;
+        }
     </style>
 </th:block>
 <th:block layout:fragment="script">
-<!-- 사용자 js 추가 -->
+    <!-- 사용자 js 추가 -->
     <script th:inline="javascript">
         $(document).ready(function(){
             const errorMessage = [[${errorMessage}]];
@@ -158,7 +162,7 @@
                th:error="*{memberPhone}" class="fieldError">Incorrect data_ad</p>
         </div>
 
-<!--프로필이미지 등록-->
+        <!--프로필이미지 등록-->
         <!-- 상품 이미지 등록 -->
         <!-- 프로필이미지 등록 -->
         <div class="form-group">

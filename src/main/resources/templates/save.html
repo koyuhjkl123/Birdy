@@ -1,7 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko" xmlns:th="https://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate='~{layouts/layout1}'>
+<th:block layout:fragment="css">
+    <style th:inline="css">
+        .fieldError {
+            color: #bd2130;
+        }
+       .content{
+    margin: 0 auto;
+        width: 75%;
+    }
+    </style>
+</th:block>
+<th:block layout:fragment="script">
+    <!--사용자 스크립트 추가-->
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            const errorMessage = [[${errorMessage}]];
+            if(errorMessage){
+                alert(errorMessage);
+            }
+        });
+    </script>
+</th:block>
+<div layout:fragment="content">
 
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -20,4 +43,5 @@
             <input type="submit" value="글작성">
         </form>
     </div>
+
 </html>

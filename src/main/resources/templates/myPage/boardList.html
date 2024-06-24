@@ -95,34 +95,5 @@
 <!-- 마지막 페이지로 이동 -->
 <a th:href="@{/board/paging(page=${boardList.totalPages})}">Last</a>
 
-
-<!--    &lt;!&ndash; 페이지 번호 링크 &ndash;&gt;-->
-<!--    <nav aria-label="Page navigation">-->
-<!--        <ul class="pagination">-->
-<!--            &lt;!&ndash; 첫 페이지로 이동 &ndash;&gt;-->
-<!--            <li class="page-item">-->
-<!--                <a class="page-link" th:href="@{/myPage/boardList(page=1)}">First</a>-->
-<!--            </li>-->
-<!--            &lt;!&ndash; 이전 페이지로 이동 &ndash;&gt;-->
-<!--            <li class="page-item">-->
-<!--                <a class="page-link" th:href="@{/myPage/boardList(page=${boardList.number})}" th:if="${!boardList.first}">Previous</a>-->
-<!--            </li>-->
-<!--            &lt;!&ndash; 페이지 번호 표시 &ndash;&gt;-->
-<!--            <span th:each="pageNumber: ${#numbers.sequence(boardList.firstPage, boardList.lastPage)}">-->
-<!--                    <li class="page-item" th:classappend="${pageNumber == boardList.number + 1} ? 'active'">-->
-<!--                        <a class="page-link" th:href="@{/myPage/boardList(page=${pageNumber})}" th:text="${pageNumber}"></a>-->
-<!--                    </li>-->
-<!--                </span>-->
-<!--            &lt;!&ndash; 다음 페이지로 이동 &ndash;&gt;-->
-<!--            <li class="page-item">-->
-<!--                <a class="page-link" th:href="@{/myPage/boardList(page=${boardList.number + 1})}" th:if="${!boardList.last}">Next</a>-->
-<!--            </li>-->
-<!--            &lt;!&ndash; 마지막 페이지로 이동 &ndash;&gt;-->
-<!--            <li class="page-item">-->
-<!--                <a class="page-link" th:href="@{/myPage/boardList(page=${boardList.totalPages})}">Last</a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </nav>-->
-
 </div>
 </html>
