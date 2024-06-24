@@ -37,7 +37,7 @@
           <th>image</th>
           <td>
             <!-- Thymeleaf문법 사용하려면 | 안에서 입력해야됨 |  -->
-            <img th:src="@{|/images/${boardDTO.fileName}|}" alt="사진">
+            <img th:if="${boardDTO.fileName != null}" th:src="@{|/images/${boardDTO.fileName}|}">
           </td>
         </tr>
       </table>
@@ -113,9 +113,7 @@
                               th:attr="data-comment-id=${comment.id}"
                               th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">삭제
                       </button>
-  
                   </span>
-  
               </div>
               <div class="card-body" th:text="${comment.commentContents}"></div>
           </div>
