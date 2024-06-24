@@ -239,12 +239,12 @@
 														<th>작성일자</th>
 														<th>조회수</th>
 													</tr>
-													<tr th:each="board : ${boardList}" th:limit="5">
+													<tr th:each="board: ${boardList}">
 														<td th:text="${board.id}"></td>
-														<td><a th:href="@{|/board/${board.id}|}" th:text="${board.boardTitle}"></a></td>
-														<td th:text="${board.adminBoardId}"></td>
-														<td th:text="*{#temporals.format(board.BoardCreatedTime, 'yyyy-MM-dd')}"></td>
-														<td th:text="${board.boardHits}"></td>
+														<td th:text="${board.boardTitle}"></td>
+														<td th:text="${board.nickName}"></td>
+														<td th:text="*{#temporals.format(board.regTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+														<td th:text="${board.count}"></td>
 													</tr>
 												</table>
 											</div>

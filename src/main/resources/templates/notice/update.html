@@ -6,10 +6,11 @@
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <script th:src="@{/js/board/board_update.js}"></script>
+    <script th:src="@{/js/notice/board_update.js}"></script>
 </head>
 
 <div layout:fragment="content">
+    <h1>공지사항</h1>
     <form id="board-update" th:action="@{/board/update/{id}(id=${boardDTO.id})}" method="post" enctype="multipart/form-data">
         title: <input type="text" name="boardTitle" th:value="${boardDTO.boardTitle}"> <br>
         contents: <textarea name="boardContent" cols="30" rows="10" th:text="${boardDTO.boardContent}"></textarea> <br>

@@ -45,7 +45,6 @@ public class MemberService{
     }
     // 회원 권한 수정시키기
     public void memberRole(Member member){
-
         if(member != null){
 
             memberRepository.save(member);
