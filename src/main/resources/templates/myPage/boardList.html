@@ -63,10 +63,10 @@
     <tr th:each="board, index: ${boardList}">
         <td th:text="${index.index + 1}"></td>
         <td th:text="${board.id}"></td>
-        <td><a th:text="${board.boardTitle}"></a></td>
-        <td th:text="${board.adminBoardId}"></td>
+        <td><a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a></td>
+        <td th:text="${board.member.memberName}"></td>
         <td th:text="*{#temporals.format(board.BoardCreatedTime, 'yyyy-MM-dd')}"></td>
-        <td th:text="${board.boardHits}"></td>
+        <td th:text="${board.count}"></td>
     </tr>
     </tbody>
 </table>
