@@ -198,7 +198,7 @@ public void boardDelete(Long boardId, String email) {
     boardImgRepository.delete(boardImg);
 }
 
-
+//내가 쓴 글 찾기
     public List<Board> getBoardsByCurrentMember(String memberName) {
         return boardRepository.findByMemberName(memberName);
     }

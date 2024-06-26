@@ -4,6 +4,7 @@ import com.keduit.bird.dto.BoardDTO;
 import com.keduit.bird.dto.CommentDTO;
 import com.keduit.bird.dto.MemberFormDTO;
 import com.keduit.bird.entity.Board;
+import com.keduit.bird.entity.BoardComment;
 import com.keduit.bird.entity.Member;
 import com.keduit.bird.entity.Profile;
 import com.keduit.bird.repository.MemberRepository;
@@ -165,6 +166,7 @@ public class MyPageController {
 
 //         프로필 이미지가 존재하지 않을 경우 기본 이미지를 반환합니다.
         if (profileImage == null) {
+            // 기본 이미지 설정
             Resource defaultImage = new ClassPathResource("/static/images/default_profile_image.jpg");
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
@@ -178,7 +180,7 @@ public class MyPageController {
             mediaType = MediaType.IMAGE_GIF;
         }
 
-        // 프로필 이미지를 반환합니다.
+        // 프로필 이미지를 반환
         ByteArrayResource resource = new ByteArrayResource(profileImage);
         return ResponseEntity.ok()
                 .contentType(mediaType)
@@ -200,15 +202,14 @@ public class MyPageController {
 
 
     //내가 단 댓글
-//    @GetMapping("/comment")
-//    public String getComment(Model model, Principal principal){
-//        String memberEmail = principal.getName();
-//        String memberName = memberRepository.findMemberNameByMemberEmail(memberEmail);
-//
-//        List<CommentDTO> commentDTOList = commentService.findByWriter(memberName);
-//        model.addAttribute("commentList", commentDTOList);
-//        return "/myPage/commentList";
-//    }
+    @GetMapping("/commentList")
+    public String getComment(Model model, Principal principal) {
+        String memberEmail = principal.getName();
+        List<BoardComment> commentList = commentService.getCommentByWriter(memberEmail);
 
+        model.addAttribute("commentList", commentList);
+
+        return "myPage/commentList";
+    }
 
 }

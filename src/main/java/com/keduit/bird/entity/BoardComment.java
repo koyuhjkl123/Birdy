@@ -30,5 +30,11 @@ public class BoardComment extends BaseEntity {
         return commentEntity;
     }
 
-
+    // nickName=memberName 을 가져오는 메서드 추가
+    public String getMemberName() {
+        if (this.board != null && this.board.getMember() != null) {
+            return this.board.getMember().getMemberName();
+        }
+        return null;
+    }
 }
