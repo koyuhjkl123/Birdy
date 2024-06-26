@@ -42,5 +42,5 @@
 // });
 
 function saveReq() {
-    location.href = "/board/insertForm";
+    location.href = "/notice/insertForm";
 }

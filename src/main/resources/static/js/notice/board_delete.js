@@ -13,7 +13,7 @@ $(document).ready(function() {
         alert("값들 가져옴"+boardid);
      // AJAX 요청 보내기
         $.ajax({
-            url: "/board/delete/" + boardid,
+            url: "/notice/delete/" + boardid,
             type: "DELETE",
             contentType: "application/json",
             data: JSON.stringify(requestData),
