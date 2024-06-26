@@ -94,13 +94,13 @@ public class MemberController {
     //로그인
     @GetMapping("/login")
     public String loginForm(){
-        System.out.println("홈으로 이동");
+        System.out.println("로그인 화면");
         return "member/memberLoginForm";
     }
 
     @GetMapping("/login/error")
     public String loginError(Model model){
-        System.out.println("에러 컨트로러러======");
+        System.out.println("에러 컨트롤러======");
         model.addAttribute("loginErrorMsg", "이메일, 혹은 비밀번호를 확인해주세요.");
         return "/member/memberLoginForm";
     }
