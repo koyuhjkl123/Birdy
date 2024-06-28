@@ -28,7 +28,6 @@ import javax.persistence.EntityNotFoundException;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardImgService boardImgService;
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final BoardImgRepository boardImgRepository;
 
@@ -59,7 +58,7 @@ public class BoardService {
 
     public List<BoardDTO> getBoardList(){
         List<Board> boardList = boardRepository.findAll();
-        String nickName;
+
 
         List<BoardDTO> boardDTOList = new ArrayList<>();
         for (Board board : boardList) {
@@ -119,10 +118,12 @@ public BoardDTO getOneBoard(Long boardId) {
         boardDTO.setUpdateTime(board.getBoardUpDatedTime());
         boardDTO.setCount(board.getCount());
 
-        if (boardImg != null) {
-            boardDTO.setFileName(boardImg.getImgName());
-            boardDTO.setImgUrl(boardImg.getImgUrl());
-            boardDTO.setOriImgName(boardImg.getOriImgName());
+        if(boardImg !=null){
+            if (!boardImg.getImgName().equals("")) {
+                boardDTO.setFileName(boardImg.getImgName());
+                boardDTO.setImgUrl(boardImg.getImgUrl());
+                boardDTO.setOriImgName(boardImg.getOriImgName());
+            }
         }
     // 게시글이 없다면
     } else {
@@ -183,6 +184,7 @@ public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,
 
 
 public void boardDelete(Long boardId, String email) {
+    System.out.println("삭제");
     // boardId와 email로 보드를 찾습니다.
     Board board = boardRepository.findById(boardId).orElse(null);
     Member member = memberRepository.findByMemberEmail(email);
@@ -199,9 +201,15 @@ public void boardDelete(Long boardId, String email) {
     }
     /// 게시글 삭제
     boardRepository.delete(board);
+
+    if(boardImg != null){
+        boardImgRepository.delete(boardImg);
+    }
     // 이미지삭제
-    boardImgRepository.delete(boardImg);
+
 }
+
+
 
     public Board increaseViewCount(Long boardId) {
         Board board = boardRepository.findById(boardId)
