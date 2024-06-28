@@ -1,0 +1,35 @@
+#title{
+    margin-top: 40px;
+}
+#searchType{
+    height: 45px;
+    border-radius: 10px;
+}
+#searchKeyword{
+    height: 45px;
+    margin-left: 10px;
+    border-radius: 10px;
+}
+#search{
+    margin-top: 20px;
+}
+
+.custom-th-width-1 {
+    width: 5%;
+}
+.custom-th-width-2 {
+    width: 40%;
+}
+.custom-th-width-3 {
+    width: 10%;
+}
+.custom-th-width-4 {
+    width: 10%;
+}
+.custom-th-width-5 {
+    width: 10%;
+}
+
+#board_list{
+    width: 50%;
+}
