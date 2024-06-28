@@ -19,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Sort;
+
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -85,7 +87,8 @@ public class BoardController {
                              @RequestParam(required = false) String keyword,
                             Model model){
         String search = "";
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        // Pageable pageable = PageRequest.of(page, size);/
         Page<Board> boardPage = boardService.getBoardPage(pageable, type, keyword);
 
         if ("titleAndContent".equals(type)) {
