@@ -119,7 +119,10 @@ public class CommentService {
     }
 
 
-
+    //내가 쓴 댓글 조회
+    public List<BoardComment> getCommentByWriter(String email) {
+        return commentRepository.findByEmail(email);
+    }
 }
 
 
