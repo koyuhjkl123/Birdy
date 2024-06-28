@@ -26,6 +26,7 @@
         }
     </style>
 </th:block>
+
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function(){
@@ -37,6 +38,11 @@
     </script>
 </th:block>
 
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
 <div layout:fragment="content">
     <div>
         <p>
@@ -46,24 +52,24 @@
         </p>
     </div>
 
-    <div id="comment-list">
+    <div id="comments-list">
         <table>
             <tr>
                 <th>no.</th>
                 <th>게시글</th>
+                <th>작성자</th>
                 <th>내용</th>
                 <th>작성날짜</th>
             </tr>
             <tr th:each="comment : ${commentList}">
                 <td th:text="${comment.id}"></td>
-                <!-- 다음 줄에서 오류 발생 -->
-                <!-- board 필드가 comment에 없기 때문에 문제 발생 -->
                 <td><a th:href="@{/board/{id}(id=${comment.board.id})}" th:text="${comment.board.boardTitle}"></a></td>
-                <!-- commentContents 필드가 comment에 없기 때문에 문제 발생 -->
+                <td th:text="${comment.getMemberName()}"></td>
                 <td th:text="${comment.content}"></td>
-                <td th:text="*{#temporals.format(comment.regTime, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#temporals.format(comment.regTime, 'yyyy-MM-dd')}"></td>
             </tr>
         </table>
+
         <div class="pagination">
             <ul>
                 <li th:if="${boardPage.hasPrevious()}">
