@@ -22,19 +22,21 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BoardNoticeService {
     private final BoardNoticeRepository boardNoticeRepository;
     private final BoardImgService boardImgService;
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final BoardImgRepository boardImgRepository;
 
     public Long insertBoard(BoardNoticeDTO boardDTO, List<MultipartFile> boardImgFileList,String email) throws Exception {
   
         Member member = memberRepository.findByMemberEmail(email);
+        BoardNotice notice = new BoardNotice();
 
 //      컨트롤러에서 확인했지만 한번더 확인
         if(member == null){
@@ -43,19 +45,23 @@ public class BoardNoticeService {
         if(!member.getRole().equals(Role.ADMIN)){
           throw new IllegalStateException("해당하는 이메일(" + email + ")에는 권한이 없습니다.");
         }
-        if(member.getRole().equals(Role.ADMIN)){}
-        BoardNotice notice = new BoardNotice();
-        notice.setBoardContent(boardDTO.getBoardContent());
-        notice.setBoardTitle(boardDTO.getBoardTitle());
-        notice.setMember(member);
-        boardNoticeRepository.save(notice);
+
+            notice.setBoardContent(boardDTO.getBoardContent());
+            notice.setBoardTitle(boardDTO.getBoardTitle());
+            notice.setMember(member);
+            boardNoticeRepository.save(notice);
+
+
+        if (!boardImgFileList.get(0).isEmpty()) {
         for (int i = 0; i < boardImgFileList.size(); i++) {
             BoardImg BoardImg = new BoardImg();
             BoardImg.setBoardNotice(notice);
             boardImgService.saveCommunityImg(BoardImg, boardImgFileList.get(i));
         }
-        return notice.getId();
     }
+
+        return notice.getId();
+}
     
 
 
@@ -95,14 +101,14 @@ public Page<BoardNotice> getBoardPage(Pageable pageable, String type, String key
 
 
 public BoardNoticeDTO getOneBoard(Long boardId) {
+    System.out.println("공지사항 하나 조회 서비스 코드 도착");
 
 
     BoardNoticeDTO boardDTO = new BoardNoticeDTO();
     // 게시글 찾기
     BoardNotice board = boardNoticeRepository.findById(boardId).orElse(null);
-
     // 이미지 찾기
-    BoardImg boardImg = boardImgRepository.findByBoardId(boardId);
+    BoardImg boardImg = boardImgRepository.findByBoardNoticeId(boardId);
 
     // 게시글 내용이 있다면
     if (board != null) {
@@ -113,11 +119,16 @@ public BoardNoticeDTO getOneBoard(Long boardId) {
         boardDTO.setNickName(board.getMember().getMemberName()); 
         boardDTO.setRegTime(board.getBoardCreatedTime());
         boardDTO.setUpdateTime(board.getBoardUpDatedTime());
-        boardDTO.setFileName(boardImg.getImgName());
-        if (boardImg != null) {
-            boardDTO.setImgUrl(boardImg.getImgUrl());
-            boardDTO.setOriImgName(boardImg.getOriImgName());
+        boardDTO.setCount(board.getCount());
+
+        if(boardImg !=null){
+            if (!boardImg.getImgName().equals("")) {
+                boardDTO.setFileName(boardImg.getImgName());
+                boardDTO.setImgUrl(boardImg.getImgUrl());
+                boardDTO.setOriImgName(boardImg.getOriImgName());
+            }
         }
+   
     // 게시글이 없다면
     } else {
         throw new RuntimeException("게시물을 찾지 못하였습니다. " + boardId);
@@ -128,12 +139,9 @@ public BoardNoticeDTO getOneBoard(Long boardId) {
 
 
 public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList, String email) throws Exception {
-    System.out.println("서비스 업데이트 도착");
-    System.out.println("서비스 업데이트 boardDTO" + boardDTO.toString());
-    System.out.println("서비스 업데이트 boardImgFileList++++" + boardImgFileList.isEmpty());
     Member member = memberRepository.findByMemberEmail(email);
     BoardNotice board = boardNoticeRepository.findById(boardDTO.getId()).orElse(null);
-    BoardImg boardImg = boardImgRepository.findByBoardId(board.getId());
+    BoardImg boardImg = boardImgRepository.findByBoardNoticeId(board.getId());
 
     if (member == null) {
         throw new UsernameNotFoundException("회원가입을 해주시기 바랍니다");
@@ -193,10 +201,25 @@ public void boardDelete(Long boardId, String email) {
     }
     /// 게시글 삭제
     boardNoticeRepository.delete(board);
-    // 이미지삭제
-    boardImgRepository.delete(boardImg);
+    if(boardImg != null){
+        boardImgRepository.delete(boardImg);
+    }
 }
    
+    public BoardNotice increaseViewCount(Long boardId) {
+        BoardNotice board = boardNoticeRepository.findById(boardId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        // 조회수를 1 증가시킵니다.
+        board.setCount(board.getCount() + 1);
+
+        // 증가된 조회수를 저장하고 업데이트된 BoardCommunity 객체를 반환합니다.
+        return boardNoticeRepository.save(board);
+    }
+
+
+
+
 
 
 

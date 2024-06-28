@@ -1,63 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko" xmlns:th="https://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate='~{layouts/layout1}'>
-<th:block layout:fragment="css">
-    <style th:inline="css">
-
-        <!-- 사용자 css 추가 -->
-        <style>
-            .fieldError {
-                color: #bd2130;
-            }
-    </style>
-</th:block>
-<th:block layout:fragment="script">
-    <!--사용자 스크립트 추가-->
-    <script th:inline="javascript">
-        $(document).ready(function(){
-            const errorMessage = [[${errorMessage}]];
-            if(errorMessage){
-                alert(errorMessage);
-            }
-        });
 
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script th:src="@{/js/board/board_update.js}"></script>
+    <link th:href="@{/css/board/board_update.css}" rel="stylesheet">
 </head>
 
-<div layout:fragment="content">
-    <form id="board-update" th:action="@{/board/update/{id}(id=${boardDTO.id})}" method="post" enctype="multipart/form-data">
-        title: <input type="text" name="boardTitle" th:value="${boardDTO.boardTitle}"> <br>
-        contents: <textarea name="boardContent" cols="30" rows="10" th:text="${boardDTO.boardContent}"></textarea> <br>
-        
-        <!-- 기존 이미지 미리 보기 섹션 -->
-        <div class="form-group" th:if="${boardDTO.imgUrl}">
-            <label>기존 이미지:</label>
-            <div class="img-preview">
-                <img th:src="@{|/images/${boardDTO.fileName}|}" alt="사진">
+
+    <div layout:fragment="content">
+        <form id="board-update" th:action="@{/board/update/{id}(id=${boardDTO.id})}" method="post" enctype="multipart/form-data" class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header">
+                        게시판 수정 폼
+                    </div>
+                    <div class="card-body">  
+                        <div class="mb-3">
+                            <label for="boardTitle" class="form-label">제목</label>
+                            <input type="text" class="form-control" id="boardTitle" name="boardTitle" th:value="${boardDTO.boardTitle}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="boardContent" class="form-label">내용</label>
+                            <textarea class="form-control" id="boardContent" name="boardContent" rows="5" th:text="${boardDTO.boardContent}" required></textarea>
+                        </div>
+                        <!-- 기존 이미지 미리 보기 섹션 -->
+                        <div class="mb-3" th:if="${boardDTO.imgUrl}">
+                            <label>기존 이미지:</label>
+                            <div class="img-preview">
+                                <img th:src="@{|/images/${boardDTO.fileName}|}" alt="사진">
+                            </div>
+                            <!-- 이미지 삭제 체크박스 -->
+                            <div class="mb-3">
+                                <input type="checkbox" name="deleteImg" id="deleteImg">
+                                <label for="deleteImg">이미지 삭제</label>
+                            </div>
+                        </div>
+                        <!-- 이미지 업로드 폼 -->
+                        <div class="mb-3">
+                            <label for="boardImage" class="form-label">이미지 업로드</label>
+                            <input type="file" class="form-control" id="boardImage" name="boardImgFile">
+                            <small id="boardImageHelp" class="form-text text-muted">이미지 파일을 업로드할 수 있습니다.</small>
+                        </div>
+                        <!-- 기존 이미지 정보를 숨겨진 필드로 포함 -->
+                        <input type="hidden" name="imgUrl" th:value="${boardDTO.imgUrl}">
+                        <input type="hidden" name="oriImgName" th:value="${boardDTO.oriImgName}">
+                        <input type="hidden" name="id" th:value="${boardDTO.id}" id="boardid">
+                        <input type="submit" value="글 수정" class="btn btn-primary">
+                        <input type="reset" value="취소" class="btn btn-default"> 
+                    </div>
+                </div>
             </div>
-            <!-- 이미지 삭제 체크박스 -->
-            <div>
-                <input type="checkbox" name="deleteImg" id="deleteImg">
-                <label for="deleteImg">이미지 삭제</label>
-            </div>
-        </div>
-        
-        <!-- 파일 입력 -->
-        <div class="custom-file img-div">
-            <input type="file" class="custom-file-input" name="boardImgFile" id="boardImgFile">
-            <label class="custom-file-label" for="boardImgFile"></label>
-        </div>
-    
-        <!-- 기존 이미지 정보를 숨겨진 필드로 포함 -->
-        <input type="hidden" name="imgUrl" th:value="${boardDTO.imgUrl}">
-        <input type="hidden" name="oriImgName" th:value="${boardDTO.oriImgName}">
-        <input type="submit" value="글 수정">
-        <input type="reset" value="취소"> 
-        <input type="hidden" name="id" th:value="${boardDTO.id}" id="boardid">
-    </form>
-</div>
+        </form>
+    </div>
+
+
 </html>

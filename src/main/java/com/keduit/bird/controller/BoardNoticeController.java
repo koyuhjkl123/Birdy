@@ -3,14 +3,11 @@ package com.keduit.bird.controller;
 import com.keduit.bird.constant.Role;
 import com.keduit.bird.dto.BoardDTO;
 import com.keduit.bird.dto.BoardNoticeDTO;
-import com.keduit.bird.dto.CommentDTO;
 import com.keduit.bird.entity.BoardNotice;
 import com.keduit.bird.entity.Member;
 import com.keduit.bird.repository.MemberRepository;
 import com.keduit.bird.service.BoardNoticeService;
-import com.keduit.bird.service.CommentService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,14 +17,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+
+
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/notic")
+@RequestMapping("/notice")
 public class BoardNoticeController {
+
+
+
     private final BoardNoticeService boardNoticeService;
     private final MemberRepository memberRepository;
 
@@ -80,6 +85,7 @@ public class BoardNoticeController {
                              @RequestParam(required = false) String type,
                              @RequestParam(required = false) String keyword,
                             Model model){
+        System.out.println("공지사항페이지 이동 컨트롤러+++");
         String search = "";
         Pageable pageable = PageRequest.of(page, size);
         Page<BoardNotice> boardPage = boardNoticeService.getBoardPage(pageable, type, keyword);
@@ -104,13 +110,41 @@ public class BoardNoticeController {
     
 
     @GetMapping("/{id}")
-    public String oneBoard(@PathVariable("id") Long boardId,Model model){
-
+    public String oneBoard(@PathVariable("id") Long boardId, Model model,
+                           HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("컨트롤러 왔음 공지사항 ");
         BoardNoticeDTO boardDTO = boardNoticeService.getOneBoard(boardId);
+
+        // Check if the board was visited
+        Cookie[] cookies = request.getCookies();
+        boolean visited = false;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                // Check if the visited cookie for the specific boardId exists
+                if (cookie.getName().equals("visited_" + boardId)) {
+                    visited = true;
+                    break;
+                }
+            }
+        }
+
+        // Increase view count if not visited
+        if (!visited) {
+            boardNoticeService.increaseViewCount(boardId);
+
+            // Set cookie to mark the board as visited
+            Cookie cookie = new Cookie("visited_" + boardId, "true");
+            cookie.setMaxAge(24 * 60 * 60); // 24 hours
+            cookie.setPath("/"); // Cookie is valid for the entire site
+            response.addCookie(cookie);
+        }
+
+        // Add boardDTO to the model
         model.addAttribute("boardDTO", boardDTO);
 
         return "notice/detail";
     }
+
 
 
     @GetMapping("update/{boardid}")
