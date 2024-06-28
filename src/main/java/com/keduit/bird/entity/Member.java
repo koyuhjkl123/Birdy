@@ -45,7 +45,7 @@ public class Member{
         String memberPwd = passwordEncoder.encode(memberFormDTO.getMemberPwd());
         member.setMemberPwd(memberPwd);
         member.setMemberPhone(memberFormDTO.getMemberPhone());
-        member.setRole(Role.MEMBER);
+        member.setRole(Role.ADMIN);
         return member;
     }
 
