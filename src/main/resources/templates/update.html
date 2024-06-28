@@ -1,29 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko" xmlns:th="https://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate='~{layouts/layout1}'>
-<th:block layout:fragment="css">
-    <style th:inline="css">
 
-        <!-- 사용자 css 추가 -->
-        <style>
-            .fieldError {
-                color: #bd2130;
-            }
-    </style>
-</th:block>
-<th:block layout:fragment="script">
-    <!--사용자 스크립트 추가-->
-    <script th:src="@{/js/board/board_update.js}"/>
-    <script th:inline="javascript">
-        $(document).ready(function(){
-            const errorMessage = [[${errorMessage}]];
-            if(errorMessage){
-                alert(errorMessage);
-            }
-        });
-    </script>
-</th:block>
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>

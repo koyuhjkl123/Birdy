@@ -34,11 +34,13 @@
             <td th:text="${boardDTO.boardContent}"></td>
         </tr>
         <tr>
-            <th>image</th>
-            <td>
-                <!-- Thymeleaf 문법 사용하려면 | 안에서 입력해야됨 -->
-                <img th:src="@{|/images/${boardDTO.fileName}|}" alt="사진">
-            </td>
+
+          <th>image</th>
+          <td>
+            <!-- Thymeleaf문법 사용하려면 | 안에서 입력해야됨 |  -->
+            <img th:if="${boardDTO.fileName != null}" th:src="@{|/images/${boardDTO.fileName}|}">
+          </td>
+
         </tr>
     </table>
     <a href="/board/list" class="btn btn-primary">목록</a>
@@ -77,57 +79,76 @@
         </form>
 
         <div th:each="comment : ${commentDTOs}" id="comments-list">
-            <div class="card m-2" th:id="'comments-' + ${comment.id}">
-                <div class="card-header">
-                    <span th:text="${comment.nickName}"></span>
-                    <span th:text="${#temporals.format(comment.regTime, 'yyyy-MM-dd')}"></span>
-                    <span>
-                        <button type="button" class="btn btn-primary comment-update-btn" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
-                                th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')
-                                       and #authentication.principal.username == comment.email}"
-                                th:attr="data-comment-id=${comment.id}, data-comment-created-by=${comment.nickName},
-                                        data-comment-content=${comment.commentContents}">수정</button>
-                        <button type="button" class="btn btn-danger commentDelete"
-                                th:attr="data-comment-id=${comment.id}"
-                                th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')
-                                       and #authentication.principal.username == comment.email}">삭제</button>
 
-                        <button type="button" class="btn btn-primary comment-update-btn" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
-                                th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
-                                th:attr="data-comment-id=${comment.id}, data-comment-created-by=${comment.nickName},
-                                        data-comment-content=${comment.commentContents}">수정</button>
-                        <button type="button" class="btn btn-danger commentDelete"
-                                th:attr="data-comment-id=${comment.id}"
-                                th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">삭제</button>
-                    </span>
-                </div>
-                <div class="card-body" th:text="${comment.commentContents}"></div>
-            </div>
-        </div>
+          <div class="card m-2" th:id="'comments-' + ${comment.id}">
+              <div class="card-header">
+                  <span th:text="${comment.nickName}"></span>
+                  <span th:text="${#temporals.format(comment.regTime, 'yyyy-MM-dd')}"></span>
+                  <span>
+              <button type="button" class="btn btn-primary comment-update-btn" data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"
+                      th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')
+                               and #authentication.principal.username == comment.email}"
+                      th:attr="data-comment-id=${comment.id}, data-comment-created-by=${comment.nickName},
+                              data-comment-content=${comment.commentContents}"
+              >
+                               수정
+                      </button>
+                      <button type="button" class="btn btn-danger commentDelete"
+                              th:attr="data-comment-id=${comment.id}"
+                              th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')
+                              and #authentication.principal.username == comment.email}">삭제
+                      </button>
+  
+                      <button type="button" class="btn btn-primary  comment-update-btn" data-bs-toggle="modal"
+                              data-bs-target="#exampleModal"
+                              th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
+                              th:attr="data-comment-id=${comment.id},data-comment-created-by=${comment.nickName},
+                              data-comment-content=${comment.commentContents}"
+                      >수정
+                      </button>
+                      <button type="button" class="btn btn-danger commentDelete"
+                              th:attr="data-comment-id=${comment.id}"
+                              th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">삭제
+                      </button>
+                  </span>
+              </div>
+              <div class="card-body" th:text="${comment.commentContents}"></div>
+          </div>
+        
+      </div>
+  
 
-        <!-- 수정 모달 -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <form class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">사용자 이름</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <textarea id="comment-content"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" class="btn btn-primary" id="commentUpdate">수정</button>
-                    </div>
-                </div>
-                <input type="hidden" id="comment-id" name="commentId">
-            </form>
-        </div>
+    <!-- 수정 모달~~~~ -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <form class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">사용자 이름</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <textarea id="comment-content"></textarea>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                  <button type="button" class="btn btn-primary" id="commentUpdate">수정</button>
+              </div>
+          </div>
+          <input type="hidden" id="comment-id" name="commentId">
+      </form>
+  </div>
+
+
+
+
+
+
+
+      </div>
+      
+
 
     </div>
-</div>
-</body>
 </html>
+
