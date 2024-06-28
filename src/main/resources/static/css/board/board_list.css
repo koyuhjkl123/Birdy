@@ -41,6 +41,11 @@ td{
     height: 20px;
 }
 
+/* 게시판에 있는 공지사항 색 표시 무슨색으로 할지 몰라서 이렇게 함 */
+td.notice{
+    background-color: red;
+}
+
 /* 페이지 */
 .pagination {
     display: flex; 
