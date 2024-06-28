@@ -12,9 +12,9 @@
 
 
     <div layout:fragment="content">
-        <div id="board">
+    <div class="container">
         <h1  class="text-center" id="title">공지사항</h1>
-        <form action="/board/list" method="GET" id="search" class="text-center">
+        <form action="/notice/list" method="GET" id="search" class="text-center">
             <select id="searchType" name="type">
                 <option value="titleAndContent">제목+내용</option>
                 <option value="title">제목</option>
@@ -23,7 +23,10 @@
             </select>
             <input type="text" id="searchKeyword" name="keyword" placeholder="검색어를 입력하세요...">
             <button type="submit" class="btn">검색</button>
-            <a href="/notice/insertForm" class="btn">글작성</a>
+
+
+            <a href="/notice/insertForm" class="btn"
+            th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">공지사항 작성</a>
         </form>
 
         <p th:if="${keyword}" class="text-center">
@@ -41,7 +44,7 @@
 
             <tr th:each="board: ${boardPage.content}">
                 <td th:text="${board.id}"></td>
-                <td >
+                <td>
                     <a th:href="@{/notice/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a>
                 </td>
                 <td th:text="${board.member.memberName}"></td>
@@ -53,13 +56,13 @@
         <div class="pagination">
             <ul>
                 <li th:if="${boardPage.hasPrevious()}">
-                    <a th:href="@{/board/list/(page=${boardPage.number - 1}, size=${boardPage.size})}">&laquo; 이전</a>
+                    <a th:href="@{/notice/list/(page=${boardPage.number - 1}, size=${boardPage.size})}">&laquo; 이전</a>
                 </li>
                 <li th:each="pageNumber : ${#numbers.sequence(0, boardPage.totalPages - 1)}" th:class="${boardPage.number == pageNumber} ? 'active'">
-                    <a th:href="@{/board/list/(page=${pageNumber}, size=${boardPage.size})}" th:text="${pageNumber + 1}"></a>
+                    <a th:href="@{/notice/list/(page=${pageNumber}, size=${boardPage.size})}" th:text="${pageNumber + 1}"></a>
                 </li>
                 <li th:if="${boardPage.hasNext()}">
-                    <a th:href="@{/board/list/(page=${boardPage.number + 1}, size=${boardPage.size})}">다음 &raquo;</a>
+                    <a th:href="@{/notice/list/(page=${boardPage.number + 1}, size=${boardPage.size})}">다음 &raquo;</a>
                 </li>
             </ul>
         </div>

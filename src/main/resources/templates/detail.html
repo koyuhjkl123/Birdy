@@ -8,39 +8,42 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script th:src="@{/js/board/board_comment.js}"></script>
     <script th:src="@{/js/board/board_delete.js}"></script>
+    <link th:href="@{/css/board/board_detail.css}" rel="stylesheet">
 </head>
 
 
-    <div layout:fragment="content">
-      <table>
-        <tr>
-          <th>id</th>
-          <td th:text="${boardDTO.id}"></td>
-        </tr>
-        <tr>
-          <th>title</th>
-          <td th:text="${boardDTO.boardTitle}"></td>
-        </tr>
-        <tr>
-          <th>writer</th>
-          <td th:text="${boardDTO.nickName}"></td>
-        </tr>
-        <tr>
-          <th>date</th>
-          <td th:text="${boardDTO.regTime}"></td>
-        </tr>
-        <tr>
-          <th>contents</th>
-          <td th:text="${boardDTO.boardContent}"></td>
-        </tr>
-        <tr>
-          <th>image</th>
-          <td>
-            <!-- Thymeleaf문법 사용하려면 | 안에서 입력해야됨 |  -->
-            <img th:if="${boardDTO.fileName != null}" th:src="@{|/images/${boardDTO.fileName}|}">
-          </td>
-        </tr>
-      </table>
+<div layout:fragment="content">
+  <div class="container">
+      <div id="detail">
+        <div class="row">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col">
+                        <span th:text="${boardDTO.boardTitle}">제목</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span th:text="${boardDTO.nickName}">작성자</span>
+                        <span th:text="*{#temporals.format(boardDTO.regTime, 'yyyy-MM-dd HH:mm:ss')}">등록일자</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col" id="count">조회수 <span th:text="${boardDTO.count}"></span></div>
+        </div>
+        <div class="row">
+            <div class="col" th:if="${boardDTO.fileName != null}">
+                <img th:src="@{|/images/${boardDTO.fileName}|}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" th:text="${boardDTO.boardContent}">내용</div>
+        </div>
+    </div>
+
+
+
+    <div class="button-container">
       <a href="/board/list" class="btn btn-primary">목록</a>
 
       <!-- 회원이고 작성자가 보이는 조건 -->
@@ -61,9 +64,10 @@
       th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">삭제</button>
 
       <input type="hidden" th:value="${boardDTO.id}" id="boardId">
+  </div>
       
       <div class="card m-2" id="comments-new">
-        
+</div>
         <!-- 댓글 작성 폼 -->
         <form action="/board/comment/insert" method="POST" id="commentWrite"
               sec:authorize="hasAnyAuthority('ROLE_MEMBER','ROLE_ADMIN')">

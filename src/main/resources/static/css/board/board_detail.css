@@ -1,0 +1,41 @@
+.col img {
+    display: block; /* 이미지를 블록 요소로 설정하여 자동으로 중앙 정렬될 수 있도록 합니다. */
+    margin: 0 auto; /* 가로 중앙 정렬 */
+    max-width: 100%; /* 이미지가 부모 요소 너비를 초과하지 않도록 설정합니다. */
+    height: auto; /* 높이를 자동으로 조정하여 이미지의 비율을 유지합니다. */
+}
+
+#detail {
+    margin-top: 30px;
+    border: 1px solid black; /* detail 섹션의 하단에만 테두리 추가 */
+    padding: 0 11px; /* 내부 여백을 추가하여 컨텐츠와 테두리 사이의 간격을 설정합니다. */
+}
+
+#detail .row {
+    border-bottom: 1px solid black; /* 각 row의 하단에 테두리 추가 */
+}
+
+#detail .row:last-child {
+    border-bottom: none; /* 마지막 row에는 하단 테두리를 없앱니다. */
+}
+
+#detail .col {
+    border-right: 1px solid black; /* 각 col의 우측에 테두리 추가 */
+    padding: 0 10px; /* 좌우 여백을 추가하여 각 col 사이의 간격을 설정합니다. */
+}
+
+#detail .col:last-child {
+    border-right: none; /* 마지막 col에는 우측 테두리를 없앱니다. */
+}
+
+.button-container {
+    margin-top: 20px; /* 버튼 컨테이너의 위쪽 여백 설정 */
+}
+
+#count{
+    border-left: 1px solid black;
+}
+
+.container{
+    margin-bottom: 20px;
+}
