@@ -217,6 +217,26 @@ public void boardDelete(Long boardId, String email) {
         return boardNoticeRepository.save(board);
     }
 
+    public List<BoardNoticeDTO> getTopBoardNotice() {
+        List<BoardNotice> notices = boardNoticeRepository.findTop3ByIdDesc();
+
+        List<BoardNoticeDTO> boardNoticeDTOs = new ArrayList<>();
+
+
+        for (BoardNotice notice : notices) {
+            BoardNoticeDTO dto = new BoardNoticeDTO();
+            dto.setId(notice.getId());
+            dto.setBoardTitle(notice.getBoardTitle());
+            dto.setBoardContent(notice.getBoardContent());
+            dto.setCount(notice.getCount());
+            dto.setNickName(notice.getMember().getMemberName());
+            dto.setRegTime(notice.getBoardCreatedTime());
+            // 필요한 경우 추가적으로 필드를 매핑할 수 있음
+            boardNoticeDTOs.add(dto);
+        }
+
+        return boardNoticeDTOs;
+    }
 
 
 

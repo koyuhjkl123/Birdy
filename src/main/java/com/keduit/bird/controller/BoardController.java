@@ -2,10 +2,13 @@ package com.keduit.bird.controller;
 
 import com.keduit.bird.constant.Role;
 import com.keduit.bird.dto.BoardDTO;
+import com.keduit.bird.dto.BoardNoticeDTO;
 import com.keduit.bird.dto.CommentDTO;
 import com.keduit.bird.entity.Board;
 import com.keduit.bird.entity.Member;
+import com.keduit.bird.repository.BoardNoticeRepository;
 import com.keduit.bird.repository.MemberRepository;
+import com.keduit.bird.service.BoardNoticeService;
 import com.keduit.bird.service.BoardService;
 import com.keduit.bird.service.CommentService;
 import com.keduit.bird.service.MemberService;
@@ -34,8 +37,8 @@ import java.util.Map;
 public class BoardController {
     private final BoardService boardService;
     private final CommentService commentService;
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final BoardNoticeService boardNoticeService;
 
     @GetMapping("/insertForm")
     public String saveForm(Principal principal){
@@ -87,9 +90,11 @@ public class BoardController {
                              @RequestParam(required = false) String keyword,
                             Model model){
         String search = "";
+        List<BoardNoticeDTO> noticeDTOs = boardNoticeService.getTopBoardNotice();
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        // Pageable pageable = PageRequest.of(page, size);/
         Page<Board> boardPage = boardService.getBoardPage(pageable, type, keyword);
+
+        
 
         if ("titleAndContent".equals(type)) {
             search = "제목+내용";
@@ -103,6 +108,7 @@ public class BoardController {
         if ("writer".equals(type)) {
             search = "작성자";
         } 
+        model.addAttribute("noticeDTOs", noticeDTOs);
         model.addAttribute("search", search);
         model.addAttribute("keyword", keyword);
         model.addAttribute("boardPage", boardPage);
