@@ -27,9 +27,7 @@
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-
     </head>
-
     <div layout:fragment="content">
         <form id="board-update" th:action="@{/board/update/{id}(id=${boardDTO.id})}" method="post" enctype="multipart/form-data">
             title: <input type="text" name="boardTitle" th:value="${boardDTO.boardTitle}"> <br>
