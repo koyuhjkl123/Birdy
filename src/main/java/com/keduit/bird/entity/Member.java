@@ -58,4 +58,5 @@ public class Member{
         member.memberPwd = passwordEncoder.encode(newPwd);
         return member.memberPwd;
     }
+
 }

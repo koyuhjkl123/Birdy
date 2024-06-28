@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Page<Board> findByBoardTitleContaining(@RequestParam("keyword") String keyword, Pageable pageable);
@@ -21,7 +23,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT b FROM Board b JOIN b.member m WHERE m.memberName LIKE %:memberName%")
     Page<Board> findByMemberNameContaining(@Param("memberName") String memberName, Pageable pageable);
 
+    @Query("SELECT b FROM Board b WHERE b.member.memberName = :memberName")
+    List<Board> findByMemberName(@Param("memberName") String memberName);
 
-    
+
 
 }

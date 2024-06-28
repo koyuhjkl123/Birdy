@@ -9,7 +9,6 @@
     <script th:src="@{/js/board/board_list.js}"></script>
 </head>
 
-
     <div layout:fragment="content">
         <form action="/board/list" method="GET">
             <select id="searchType" name="type">
@@ -37,7 +36,6 @@
             <tbody>
 
             </tbody>
-
             <tr th:each="board: ${boardPage.content}">
                 <td th:text="${board.id}"></td>
                 <td >
@@ -63,4 +61,7 @@
             </ul>
         </div>
     </div>
+
+</div>
+
 </html>
