@@ -11,7 +11,7 @@ $(document).ready(function() {
         
         // AJAX 요청 보내기
         $.ajax({
-            url: "/board/update/" + boardid, // boardDTO.id를 URL에 포함시킴
+            url: "/notice/update/" + boardid, // boardDTO.id를 URL에 포함시킴
             type: "PUT",
             processData: false,
             contentType: false,
@@ -21,7 +21,7 @@ $(document).ready(function() {
             },
             success: function(result, status) {
                 alert("수정이 완료되었습니다.");
-                location.href = "/board/list"; // 페이지 새로고침
+                location.href = "/notice/list"; // 페이지 새로고침
             },
             error: function(jqXHR, status, error) {
                 alert(jqXHR.responseText);

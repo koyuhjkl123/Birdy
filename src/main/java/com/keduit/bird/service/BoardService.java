@@ -4,6 +4,7 @@ import com.keduit.bird.constant.Role;
 import com.keduit.bird.dto.BoardDTO;
 import com.keduit.bird.entity.Board;
 import com.keduit.bird.entity.BoardImg;
+import com.keduit.bird.entity.BoardNotice;
 import com.keduit.bird.entity.Member;
 import com.keduit.bird.repository.BoardImgRepository;
 import com.keduit.bird.repository.BoardRepository;
@@ -18,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -97,8 +100,6 @@ public Page<Board> getBoardPage(Pageable pageable, String type, String keyword) 
 
 
 public BoardDTO getOneBoard(Long boardId) {
-
-
     BoardDTO boardDTO = new BoardDTO();
     // 게시글 찾기
     Board board = boardRepository.findById(boardId).orElse(null);
@@ -115,8 +116,10 @@ public BoardDTO getOneBoard(Long boardId) {
         boardDTO.setNickName(board.getMember().getMemberName()); 
         boardDTO.setRegTime(board.getBoardCreatedTime());
         boardDTO.setUpdateTime(board.getBoardUpDatedTime());
-        boardDTO.setFileName(boardImg.getImgName());
+        boardDTO.setCount(board.getCount());
+
         if (boardImg != null) {
+            boardDTO.setFileName(boardImg.getImgName());
             boardDTO.setImgUrl(boardImg.getImgUrl());
             boardDTO.setOriImgName(boardImg.getOriImgName());
         }
@@ -199,6 +202,17 @@ public void boardDelete(Long boardId, String email) {
     boardImgRepository.delete(boardImg);
 }
    
+    public Board increaseViewCount(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        // 조회수를 1 증가시킵니다.
+        board.setCount(board.getCount() + 1);
+
+        // 증가된 조회수를 저장하고 업데이트된 BoardCommunity 객체를 반환합니다.
+        return boardRepository.save(board);
+    }
+
 
 
 

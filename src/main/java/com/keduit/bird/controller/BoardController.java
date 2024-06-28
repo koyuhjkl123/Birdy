@@ -4,33 +4,28 @@ import com.keduit.bird.constant.Role;
 import com.keduit.bird.dto.BoardDTO;
 import com.keduit.bird.dto.CommentDTO;
 import com.keduit.bird.entity.Board;
-import com.keduit.bird.entity.BoardComment;
 import com.keduit.bird.entity.Member;
 import com.keduit.bird.repository.MemberRepository;
 import com.keduit.bird.service.BoardService;
 import com.keduit.bird.service.CommentService;
 import com.keduit.bird.service.MemberService;
 import lombok.RequiredArgsConstructor;
-
-import org.hibernate.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.io.IOException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/board")
@@ -113,13 +108,39 @@ public class BoardController {
     
 
     @GetMapping("/{id}")
-    public String oneBoard(@PathVariable("id") Long boardId,Model model){
+    public String oneBoard(@PathVariable("id") Long boardId, Model model,
+                            HttpServletRequest request, HttpServletResponse response){
 
         System.out.println("하나조회 컨트롤러왔음");
         
         List<CommentDTO> commentDTOs = commentService.getBoardComment(boardId);
         BoardDTO boardDTO = boardService.getOneBoard(boardId);
 
+
+
+             // Check if the board was visited
+        Cookie[] cookies = request.getCookies();
+        boolean visited = false;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                // Check if the visited cookie for the specific boardId exists
+                if (cookie.getName().equals("visited_" + boardId)) {
+                    visited = true;
+                    break;
+                }
+            }
+        }
+
+        // Increase view count if not visited
+        if (!visited) {
+            boardService.increaseViewCount(boardId);
+
+            // Set cookie to mark the board as visited
+            Cookie cookie = new Cookie("visited_" + boardId, "true");
+            cookie.setMaxAge(24 * 60 * 60); // 24 hours
+            cookie.setPath("/"); // Cookie is valid for the entire site
+            response.addCookie(cookie);
+        }
 
         model.addAttribute("commentDTOs", commentDTOs);
         model.addAttribute("boardDTO", boardDTO);
