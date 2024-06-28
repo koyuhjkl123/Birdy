@@ -40,33 +40,32 @@ td{
     height: 20px;
 }
 
-
 /* 페이지 */
 .pagination {
-    display: flex; /* Use flexbox to arrange items horizontally */
-    justify-content: center; /* Center align items horizontally */
-    margin-top: 20px; /* Add margin if needed */
+    display: flex; 
+    justify-content: center; 
+    margin-top: 20px;
 }
 
 .pagination ul {
     padding: 0;
-    list-style: none; /* Remove default list styles */
+    list-style: none;
     display: flex;
 }
 
 .pagination li {
-    margin: 0 5px; /* Adjust spacing between items */
+    margin: 0 5px; 
 }
 
 .pagination a {
     display: block;
-    padding: 8px 12px; /* Adjust padding to create clickable area */
+    padding: 8px 12px;
     text-decoration: none;
-    color: #333; /* Choose text color */
-    border: 1px solid #ccc; /* Add border for buttons */
-    border-radius: 3px; /* Optional: Rounded corners */
+    color: #333;
+    border: 1px solid #ccc; 
+    border-radius: 3px;
 }
 
 .pagination a:hover {
-    background-color: #f0f0f0; /* Background color on hover */
+    background-color: #f0f0f0;
 }
