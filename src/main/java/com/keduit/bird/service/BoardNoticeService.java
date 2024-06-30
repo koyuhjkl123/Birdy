@@ -30,13 +30,13 @@ import javax.persistence.EntityNotFoundException;
 public class BoardNoticeService {
     private final BoardNoticeRepository boardNoticeRepository;
     private final BoardImgService boardImgService;
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final BoardImgRepository boardImgRepository;
 
     public Long insertBoard(BoardNoticeDTO boardDTO, List<MultipartFile> boardImgFileList,String email) throws Exception {
   
         Member member = memberRepository.findByMemberEmail(email);
+        BoardNotice notice = new BoardNotice();
 
 //      컨트롤러에서 확인했지만 한번더 확인
         if(member == null){
@@ -45,12 +45,13 @@ public class BoardNoticeService {
         if(!member.getRole().equals(Role.ADMIN)){
           throw new IllegalStateException("해당하는 이메일(" + email + ")에는 권한이 없습니다.");
         }
-        if(member.getRole().equals(Role.ADMIN)){}
-        BoardNotice notice = new BoardNotice();
-        notice.setBoardContent(boardDTO.getBoardContent());
-        notice.setBoardTitle(boardDTO.getBoardTitle());
-        notice.setMember(member);
-        boardNoticeRepository.save(notice);
+
+            notice.setBoardContent(boardDTO.getBoardContent());
+            notice.setBoardTitle(boardDTO.getBoardTitle());
+            notice.setMember(member);
+            boardNoticeRepository.save(notice);
+
+
         if (!boardImgFileList.get(0).isEmpty()) {
         for (int i = 0; i < boardImgFileList.size(); i++) {
             BoardImg BoardImg = new BoardImg();
@@ -58,6 +59,7 @@ public class BoardNoticeService {
             boardImgService.saveCommunityImg(BoardImg, boardImgFileList.get(i));
         }
     }
+
         return notice.getId();
 }
     
@@ -119,11 +121,14 @@ public BoardNoticeDTO getOneBoard(Long boardId) {
         boardDTO.setUpdateTime(board.getBoardUpDatedTime());
         boardDTO.setCount(board.getCount());
 
-        if (boardImg != null) {
-            boardDTO.setImgUrl(boardImg.getImgUrl());
-            boardDTO.setOriImgName(boardImg.getOriImgName());
-            boardDTO.setFileName(boardImg.getImgName());
+        if(boardImg !=null){
+            if (!boardImg.getImgName().equals("")) {
+                boardDTO.setFileName(boardImg.getImgName());
+                boardDTO.setImgUrl(boardImg.getImgUrl());
+                boardDTO.setOriImgName(boardImg.getOriImgName());
+            }
         }
+   
     // 게시글이 없다면
     } else {
         throw new RuntimeException("게시물을 찾지 못하였습니다. " + boardId);
@@ -196,8 +201,9 @@ public void boardDelete(Long boardId, String email) {
     }
     /// 게시글 삭제
     boardNoticeRepository.delete(board);
-    // 이미지삭제
-    boardImgRepository.delete(boardImg);
+    if(boardImg != null){
+        boardImgRepository.delete(boardImg);
+    }
 }
    
     public BoardNotice increaseViewCount(Long boardId) {
