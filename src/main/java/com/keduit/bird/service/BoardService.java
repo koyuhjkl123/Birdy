@@ -99,6 +99,7 @@ public Page<Board> getBoardPage(Pageable pageable, String type, String keyword) 
 
 
 public BoardDTO getOneBoard(Long boardId) {
+
     BoardDTO boardDTO = new BoardDTO();
     // 게시글 찾기
     Board board = boardRepository.findById(boardId).orElse(null);
@@ -207,8 +208,9 @@ public void boardDelete(Long boardId, String email) {
     // 이미지삭제
 
 }
-   
-public Board increaseViewCount(Long boardId) {
+
+    public Board increaseViewCount(Long boardId) {
+
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -219,8 +221,10 @@ public Board increaseViewCount(Long boardId) {
         return boardRepository.save(board);
     }
 
-
-
+//내가 쓴 글 찾기(mpage 기능)
+    public List<Board> getBoardsByCurrentMember(String memberName) {
+        return boardRepository.findByMemberName(memberName);
+    }
 
 }
 

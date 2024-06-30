@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate='~{layouts/layout1}'>
+      layout:decorate='~{layouts/layout1}' xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -10,7 +10,6 @@
     <script th:src="@{/js/board/board_delete.js}"></script>
     <link th:href="@{/css/board/board_detail.css}" rel="stylesheet">
 </head>
-
 
 <div layout:fragment="content">
   <div class="container">
@@ -72,7 +71,6 @@
         <form action="/board/comment/insert" method="POST" id="commentWrite"
               sec:authorize="hasAnyAuthority('ROLE_MEMBER','ROLE_ADMIN')">
             <div class="card-body">
-
                 <div class="mb-3">
                     <label class="form-label">댓글 내용</label>
                     <textarea type="text" class="form-control form-control-sm" rows="3" id="new-comment-body comment"
@@ -84,8 +82,8 @@
             </div>
         </form>
 
-
         <div th:each="comment : ${commentDTOs}" id="comments-list">
+
           <div class="card m-2" th:id="'comments-' + ${comment.id}">
               <div class="card-header">
                   <span th:text="${comment.nickName}"></span>
@@ -157,3 +155,4 @@
 
     </div>
 </html>
+

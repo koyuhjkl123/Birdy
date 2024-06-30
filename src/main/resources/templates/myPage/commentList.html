@@ -5,33 +5,28 @@
 
 <th:block layout:fragment="css">
     <style th:inline="css">
-
-        <!-- 사용자 css 추가 -->
-        <style>
-            .fieldError {
-                color: #bd2130;
-            }
-.content{
-        text-align:center;
-        padding:50px;
-        }
-        table{
-        border:1px solid;
-        border-radius:20px;
-        border-collapse:collapse;
-        text-align:center;
-        }
-        th,td{
-        border: 1px solid gray;
-        }
-        td{
-        padding: 20px;
-        }
-
+        .content{
+text-align:center;
+margin:5% 10%;
+}
+table{
+margin:0 15%;
+width:70%;
+border:1px solid;
+border-radius:20px;
+border-collapse:collapse;
+text-align:center;
+}
+th,td{
+border: 1px solid gray;
+}
+td{
+padding: 20px;
+}
     </style>
 </th:block>
+
 <th:block layout:fragment="script">
-    <!--사용자 스크립트 추가-->
     <script th:inline="javascript">
         $(document).ready(function(){
             const errorMessage = [[${errorMessage}]];
@@ -42,30 +37,51 @@
     </script>
 </th:block>
 
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
 <div layout:fragment="content">
     <div>
         <p>
-            <a th:href="@{/myPage/myPage_main}" class="btn btn-secondary me-2">MyPage_Main</a>
-            <a th:href="@{/myPage/boardList}" class="btn btn-secondary me-2">My List</a>
-            <a th:href="@{/myPage/comment}" class="btn btn-secondary me-2">My Comment</a>
+            <a th:href="@{/myPage/myPage_main}" class="btn btn-primary me-2">My Main</a>
+            <a th:href="@{/myPage/boardList}" class="btn btn-primary me-2">My List</a>
+            <a th:href="@{/myPage/commentList}" class="btn btn-secondary me-2">My Comment</a>
         </p>
     </div>
 
-    <div id="comment-list">
+    <div id="comments-list">
         <table>
             <tr>
-                <th>댓글번호</th>
+                <th>no.</th>
+                <th>게시글</th>
                 <th>작성자</th>
                 <th>내용</th>
-                <th>작성시간</th>
+                <th>작성날짜</th>
             </tr>
-            <tr th:each="comment: ${commentList}">
+            <tr th:each="comment : ${commentList}">
                 <td th:text="${comment.id}"></td>
-                <td th:text="${comment.commentWriter}"></td>
-                <td th:text="${comment.commentContents}"></td>
-                <td th:text="${#temporals.format(comment.commentCreatedTime, 'yyyy-MM-dd')}" ></td>
+                <td><a th:href="@{/board/{id}(id=${comment.board.id})}" th:text="${comment.board.boardTitle}"></a></td>
+                <td th:text="${comment.getMemberName()}"></td>
+                <td th:text="${comment.content}"></td>
+                <td th:text="${#temporals.format(comment.regTime, 'yyyy-MM-dd')}"></td>
             </tr>
         </table>
+
+        <div class="pagination">
+            <ul>
+                <li th:if="${boardPage.hasPrevious()}">
+                    <a th:href="@{/board/list/(page=${boardPage.number - 1}, size=${boardPage.size})}">&laquo; 이전</a>
+                </li>
+                <li th:each="pageNumber : ${#numbers.sequence(0, boardPage.totalPages - 1)}" th:class="${boardPage.number == pageNumber} ? 'active'">
+                    <a th:href="@{/board/list/(page=${pageNumber}, size=${boardPage.size})}" th:text="${pageNumber + 1}"></a>
+                </li>
+                <li th:if="${boardPage.hasNext()}">
+                    <a th:href="@{/board/list/(page=${boardPage.number + 1}, size=${boardPage.size})}">다음 &raquo;</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 </html>
