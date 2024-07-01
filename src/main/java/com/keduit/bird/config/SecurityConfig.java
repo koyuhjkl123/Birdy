@@ -29,25 +29,21 @@ public class SecurityConfig{
                 .failureUrl("/members/login/error")
 //      불일치로 오류나면 에러 내보내기, 아니면 default인 메인으로 이동
                 .and()
-//      그리고 ---
                 .logout()
-//      로그아웃을 시도해서
                 .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
-//      AntPathRequestMatcher = 디폴트 설정(logout 페이지를 따로 만들지 않아 아래 "/"를 따라 메인으로 돌아간다)
+//      AntPathRequestMatcher = 로그아웃시 디폴트 설정(logout 페이지를 따로 만들지 않아 아래 루트를 따라간다)
                 .logoutSuccessUrl("/");
-//      성공하면 메인으로
 
-        //카카오추가(login)
-        http.oauth2Login().loginPage("/members/login")
-                .successHandler(autenticationSuccessHandler());
+        //소셜 로그인 추가
+        http.oauth2Login().loginPage("/members/login");
 
         http.authorizeRequests()
                 // 특정 경로에 대한 접근 권한을 설정
-                .mvcMatchers("/", "/members/**","/bird/**", "/intro/**", "favicon.ico", "error", "/member/**")
+                .mvcMatchers("/", "/members/**", "/intro/**", "favicon.ico", "error")
                 // 접근 가능한 경로를 지정
                 .permitAll()
                 // 앞서 작성한 경로는 누구나 접근 가능하도록 All 설정
-                .mvcMatchers("/bird/**", "/member/**", "/myPage/**", "/", "/board/**", "/intro/**","/notice/**")
+                .mvcMatchers("/bird/**", "/myPage/**", "/board/**", "comment/**","/intro/**","/notice/**")
                 .hasAnyRole("MEMBER","ADMIN")
                 .mvcMatchers("/admin/**")
                 // "/admin/**" 경로에 대한 권한 설정
@@ -61,10 +57,8 @@ public class SecurityConfig{
                 .and()
                 .csrf()
 //                .disable();
-                .ignoringAntMatchers("/members/**", "/myPage/memberStop", "/myPage/update","/board/save","/admin/**");
-        //"/mrmbers/**"경로에 대해서만 csrf 토큰 보호 off시킴.
-//                .disable();
-        //403 오류....짜증...보안 꺼버리기 <- 최후의 수단...
+                .ignoringAntMatchers("/members/**", "/myPage/memberStop", "/myPage/update","/board/save","/admin/**")
+                ;
 
 // 인증되지 않은 요청에 대한 처리 설정
         http.exceptionHandling()
@@ -92,8 +86,4 @@ public class SecurityConfig{
         // Spring Security에 의해 처리되지 않고, 보안 검사를 통과하지 않습니다.
     }
 
-    @Bean
-    public AuthenticationSuccessHandler autenticationSuccessHandler(){
-        return new CustomSocialLoginSeccessHandler(passwordEncoder());
-    }
 }
