@@ -43,6 +43,7 @@
 
 
 
+
     <div class="button-container">
       <a href="/board/list" class="btn btn-primary">목록</a>
 
@@ -68,7 +69,6 @@
       
       <div class="card m-2" id="comments-new">
 </div>
-
         <!-- 댓글 작성 폼 -->
         <form action="/board/comment/insert" method="POST" id="commentWrite"
               sec:authorize="hasAnyAuthority('ROLE_MEMBER','ROLE_ADMIN')">

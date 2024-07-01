@@ -5,12 +5,9 @@
 
 <th:block layout:fragment="css">
     <style th:inline="css">
-        .fieldError {
-            color: #bd2130;
-        }
         .content{
         text-align:center;
-        padding:50px;
+        margin:5% 10%;
         }
         .content-body{
             border: 1px solid;
@@ -18,9 +15,7 @@
             width: 75%;
             margin: 0 auto;
             padding: 10px;
-            background-image: linear-gradient(to right top, #b8dbce, #b7d7cc, #b6d3ca, #b6cec8, #b5cac5, #b7c9c5, #b8c9c4, #bac8c4, #becbc7, #c2cdc9, #c5d0cc, #c9d3cf);
         }
-
         .form-group img{
         border: 2px solid gray;
         border-radius:50%;
@@ -46,14 +41,13 @@
 <div layout:fragment="content">
     <p>
         <a th:href="@{/myPage/myPage_main}" class="btn btn-secondary me-2">My Main</a>
-        <a th:href="@{/myPage/boardList}" class="btn btn-secondary me-2">My List</a>
-        <a th:href="@{/myPage/commentList}" class="btn btn-secondary me-2">My Comment</a>
+        <a th:href="@{/myPage/boardList}" class="btn btn-primary me-2">My List</a>
+        <a th:href="@{/myPage/commentList}" class="btn btn-primary me-2">My Comment</a>
     </p>
     <div class="content-body">
         <div class="row">
             <div class="col-12">
                 <div class="form-group">
-                    <p>프로필 이미지:</p>
                     <img th:src="@{'/myPage/profile/' + ${member.memberEmail}}" style="max-width: 200px;" alt="프로필 이미지"/>
                 </div>
             </div>
@@ -85,12 +79,9 @@
         <div class="row">
             <div class="col-12">
                 <a th:href="@{update}" class="btn btn-secondary me-2">수정하기</a>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <a th:href="@{memberStop}" class="btn btn-secondary me-2">탈퇴하기</a>
+<!--            </div>-->
+<!--            <div class="col-12">-->
+                <a th:href="@{memberStop}" class="btn me-2">탈퇴하기</a>
             </div>
         </div>
     </div>
