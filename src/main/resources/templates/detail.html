@@ -41,8 +41,6 @@
         </div>
     </div>
 
-
-
     <div class="button-container">
       <a href="/board/list" class="btn btn-primary">목록</a>
 
@@ -69,6 +67,31 @@
       <div class="card m-2" id="comments-new">
 </div>
 
+    <div class="button-container">
+      <a href="/board/list" class="btn btn-primary">목록</a>
+
+      <!-- 회원이고 작성자가 보이는 조건 -->
+      <a th:href="@{/board/update/{id}(id=${boardDTO.id})}" class="btn btn-secondary"
+          th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')
+          and #authentication.principal.username == boardDTO.email}"
+      >수정</a>
+      <button class="btn btn-danger board-delete"
+      th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')
+          and #authentication.principal.username == boardDTO.email}"
+      >삭제</button>
+
+
+      <!-- 관리자 조건일때 보이는 조건  -->
+      <a th:href="@{/board/update/{id}(id=${boardDTO.id})}" class="btn btn-secondary"
+      th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">수정</a>
+      <button class="btn btn-danger board-delete"
+      th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">삭제</button>
+
+      <input type="hidden" th:value="${boardDTO.id}" id="boardId">
+  </div>
+      
+      <div class="card m-2" id="comments-new">
+</div>
         <!-- 댓글 작성 폼 -->
         <form action="/board/comment/insert" method="POST" id="commentWrite"
               sec:authorize="hasAnyAuthority('ROLE_MEMBER','ROLE_ADMIN')">

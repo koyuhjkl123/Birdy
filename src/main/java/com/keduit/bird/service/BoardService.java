@@ -213,6 +213,7 @@ public void boardDelete(Long boardId, String email) {
 
 
     public Board increaseViewCount(Long boardId) {
+
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(EntityNotFoundException::new);
 

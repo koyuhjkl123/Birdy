@@ -5,25 +5,24 @@
 
 <th:block layout:fragment="css">
     <style th:inline="css">
-        .fieldError {
-            color: #bd2130;
-        }
-        .content {
-            text-align: center;
-            padding: 50px;
-        }
-        table {
-            border: 1px solid;
-            border-radius: 20px;
-            border-collapse: collapse;
-            text-align: center;
-        }
-        th, td {
-            border: 1px solid gray;
-        }
-        td {
-            padding: 20px;
-        }
+        .content{
+text-align:center;
+margin:5% 10%;
+}
+table{
+margin:0 15%;
+width:70%;
+border:1px solid;
+border-radius:20px;
+border-collapse:collapse;
+text-align:center;
+}
+th,td{
+border: 1px solid gray;
+}
+td{
+padding: 20px;
+}
     </style>
 </th:block>
 
@@ -46,8 +45,8 @@
 <div layout:fragment="content">
     <div>
         <p>
-            <a th:href="@{/myPage/myPage_main}" class="btn btn-secondary me-2">My Main</a>
-            <a th:href="@{/myPage/boardList}" class="btn btn-secondary me-2">My List</a>
+            <a th:href="@{/myPage/myPage_main}" class="btn btn-primary me-2">My Main</a>
+            <a th:href="@{/myPage/boardList}" class="btn btn-primary me-2">My List</a>
             <a th:href="@{/myPage/commentList}" class="btn btn-secondary me-2">My Comment</a>
         </p>
     </div>
