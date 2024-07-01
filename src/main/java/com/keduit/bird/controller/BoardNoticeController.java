@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -87,7 +88,7 @@ public class BoardNoticeController {
                             Model model){
         System.out.println("공지사항페이지 이동 컨트롤러+++");
         String search = "";
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Page<BoardNotice> boardPage = boardNoticeService.getBoardPage(pageable, type, keyword);
 
         if ("titleAndContent".equals(type)) {

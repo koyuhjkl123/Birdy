@@ -11,6 +11,7 @@
     <link th:href="@{/css/board/board_detail.css}" rel="stylesheet">
 </head>
 
+
 <div layout:fragment="content">
   <div class="container">
       <div id="detail">
@@ -39,6 +40,7 @@
             <div class="col" th:text="${boardDTO.boardContent}">내용</div>
         </div>
     </div>
+
 
 
 
@@ -121,7 +123,6 @@
           </div>
         
       </div>
-  
 
     <!-- 수정 모달~~~~ -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
