@@ -10,7 +10,6 @@
     <link th:href="@{/css/board/board_update.css}" rel="stylesheet">
 </head>
 
-
     <div layout:fragment="content">
         <form id="board-update" th:action="@{/board/update/{id}(id=${boardDTO.id})}" method="post" enctype="multipart/form-data" class="row">
             <div class="col-md-8 offset-md-2">
@@ -59,3 +58,4 @@
 
 
 </html>
+
