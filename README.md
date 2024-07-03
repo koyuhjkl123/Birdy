@@ -109,9 +109,7 @@
       * 게시글, 댓글 CRUD 구현
       * 게시판 파일 업로드
       * 목록 페이징 처리
-    * 탐조대 구현
-      * 카카오 지도 API를 활용한 탐조대 시각화 구현
-      * 철새의 기본 정보 안내
+
       
 # Birdy 핵심 기능 설명
 저희 사이트 핵심 코드는 "**회원가입/로그인, 카카오API를 활용한 지도 구현, 커뮤니티 게시판, 새의 뉴스, 새의 통계 그래프 시각화, 새의 앨범**" <br>
@@ -590,59 +588,91 @@ public class BirdService {
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate='~{layouts/layout1}'>
 
-
-    <title>Title</title>
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script th:src="@{/js/board/board_list.js}"></script>
+    <link th:href="@{/css/board/board_list.css}" rel="stylesheet">
+</head>
 
     <div layout:fragment="content">
-        <button onclick="saveReq()">글작성</button>
 
-        <table>
-            <tr>
-                <th>id</th>
-                <th>title</th>
-                <th>writer</th>
-                <th>date</th>
-                <th>hits</th>
-            </tr>
-            <tr th:each="board: ${boardList}">
-                <td th:text="${board.id}"></td>
-                <td><a th:href="@{|/board/${board.id}|(page=${boardList.number + 1})}" th:text="${board.boardTitle}"></a></td>
-                <td th:text="${board.adminBoardId}"></td>
-                <td th:text="*{#temporals.format(board.BoardCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                <td th:text="${board.boardHits}"></td>
-            </tr>
-        </table>
-        <!-- 첫번째 페이지로 이동 -->
-        <!-- /board/paging?page=1 -->
-        <a th:href="@{/board/paging(page=1)}">First</a>
-        <!-- 이전 링크 활성화 비활성화 -->
-        <!-- boardList.getNumber() 사용자:2페이지 getNumber()=1 -->
-        <a th:href="${boardList.first} ? '#' : @{/board/paging(page=${boardList.number})}">prev</a>
+        <div class="container">
+            <h1  class="text-center" id="title">자유게시판</h1>
+            <form action="/board/list" method="GET" id="search" class="text-center">
+                <select id="searchType" name="type">
+                    <option value="titleAndContent">제목+내용</option>
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                    <option value="writer">작성자</option>
+                </select>
+                <input type="text" id="searchKeyword" name="keyword" placeholder="검색어를 입력하세요...">
+                <button type="submit" class="btn">검색</button>
+    
+    
+                <a href="/board/insertForm" class="btn"
+                th:if="${#authorization.expression('isAuthenticated()')}">자유게시판 작성</a>
+            </form>
+    
+            <p th:if="${keyword}" class="text-center">
+                <span th:text="${search}"></span> : <span th:text="${keyword}"></span> 검색 결과입니다</p>
+    
+                <table class="table table-striped table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th class="custom-th-width-1">번호</th>
+                            <th class="custom-th-width-2">제목</th>
+                            <th class="custom-th-width-3">작성자</th>
+                            <th class="custom-th-width-4">등록일자</th>
+                            <th class="custom-th-width-5">조회수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 최신 공지사항 목록 출력 -->
+                        <tr th:each="noticeDTO : ${noticeDTOs}">
+                            <td th:text="${noticeDTO.id}"  class="notice"></td>
+                            <td  class="notice">
+                                <a th:href="@{/noticeDTO/{id}(id=${noticeDTO.id})}" th:text="${noticeDTO.boardTitle}"></a>
+                            </td>
+                            <td th:text="${noticeDTO.nickName}"  class="notice"></td>
+                            <td th:text="${#temporals.format(noticeDTO.regTime, 'yyyy-MM-dd HH:mm:ss')}"  class="notice"></td>
+                            <td th:text="${noticeDTO.count}"  class="notice"></td>
+                        </tr>
+                        
+                    
+                        <!-- 게시판 목록 출력 -->
+                        <tr th:each="board : ${boardPage.content}">
+                            <td th:text="${board.id}"></td>
+                            <td>
+                                <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a>
+                            </td>
+                            <td th:text="${board.member.memberName}"></td>
+                            <td th:text="${#temporals.format(board.boardCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                            <td th:text="${board.count}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+    
+            <div class="pagination">
+                <ul>
+                    <li th:if="${boardPage.hasPrevious()}">
+                        <a th:href="@{/board/list/(page=${boardPage.number - 1}, size=${boardPage.size})}">&laquo; 이전</a>
+                    </li>
+                    <li th:each="pageNumber : ${#numbers.sequence(0, boardPage.totalPages - 1)}" th:class="${boardPage.number == pageNumber} ? 'active'">
+                        <a th:href="@{/board/list/(page=${pageNumber}, size=${boardPage.size})}" th:text="${pageNumber + 1}"></a>
+                    </li>
+                    <li th:if="${boardPage.hasNext()}">
+                        <a th:href="@{/board/list/(page=${boardPage.number + 1}, size=${boardPage.size})}">다음 &raquo;</a>
+                    </li>
+                </ul>
+            </div>
 
-        <!-- 페이지 번호 링크(현재 페이지는 숫자만)
-                for(int page=startPage; page<=endPage; page++)-->
-        <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
-        <!-- 현재페이지는 링크 없이 숫자만 -->
-            <span th:if="${page == boardList.number + 1}" th:text="${page}"></span>
-            <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
-            <span th:unless="${page == boardList.number + 1}">
-                <a th:href="@{/board/paging(page=${page})}" th:text="${page}"></a>
-            </span>
-        </span>
-
-        <!-- 다음 링크 활성화 비활성화
-            사용자: 2페이지, getNumber: 1, 3페이지-->
-        <a th:href="${boardList.last} ? '#' : @{/board/paging(page=${boardList.number + 2})}">next</a>
-        <!-- 마지막 페이지로 이동 -->
-        <a th:href="@{/board/paging(page=${boardList.totalPages})}">Last</a>
-
-        <script>
-            const saveReq = () => {
-                location.href = "/board/save";
-            }
-
-        </script>
+        </div>
     </div>
+
+</div>
+
 </html>
 ```
 </details>
@@ -651,95 +681,229 @@ public class BirdService {
     <summary>코드 보기(Controller)</summary>
 
 ```java
+package com.keduit.bird.controller;
+
+import com.keduit.bird.constant.Role;
+import com.keduit.bird.dto.BoardDTO;
+import com.keduit.bird.dto.BoardNoticeDTO;
+import com.keduit.bird.dto.CommentDTO;
+import com.keduit.bird.entity.Board;
+import com.keduit.bird.entity.Member;
+import com.keduit.bird.repository.BoardNoticeRepository;
+import com.keduit.bird.repository.MemberRepository;
+import com.keduit.bird.service.BoardNoticeService;
+import com.keduit.bird.service.BoardService;
+import com.keduit.bird.service.CommentService;
+import com.keduit.bird.service.MemberService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Sort;
+
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
     private final CommentService commentService;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
+    private final BoardNoticeService boardNoticeService;
 
-    @GetMapping("/save")
-    public String saveForm(Principal principal, Model model){
-        String memberEmail = principal.getName();
-        String adminBoardId = memberService.findMemberNameByMemberEmail(memberEmail);
-        model.addAttribute("adminBoardId", adminBoardId);
+    @GetMapping("/insertForm")
+    public String saveForm(Principal principal){
+        String email = principal.getName();
+        Member member = memberRepository.findByMemberEmail(email);
+        if(member == null){
+//           만약에 시큐리티에서도 했지만 한번 더 확인
+            return "/members/login";
+        }
+        if(member.getRole().equals(Role.STOP)){
+//           정지된 사람도 다시 로그인 페이지로 이동
+            return "/members/login";
+        }
         return "save";
     }
-
     //작성자를 해당 유저의 이름으로 자동적용시키기위해 코드 추가함.
+
     @PostMapping("/save")
-    public String save(@ModelAttribute BoardDTO boardDTO, Principal principal) throws IOException {
-        System.out.println("boardDTO = " + boardDTO);
-        boardDTO.setAdminBoardId(memberService.findMemberNameByMemberEmail(principal.getName()));
-        boardService.save(boardDTO);
-        return "redirect:/board/paging";
+    public ResponseEntity<String>  boardInsert(@RequestParam("boardTitle") String title,
+                       @RequestParam("boardContent") String content,
+                       @RequestParam("boardImgFile") List<MultipartFile> imgFiles,
+                       Principal principal) throws Exception{
+    String email = principal.getName();
+    Member member = memberRepository.findByMemberEmail(email);
+    if (member == null) {
+        System.out.println("데이터베이스에 없는 회원입니다.");
+         return new ResponseEntity<>("데이터베이스에 없는 회원입니다.", HttpStatus.NOT_FOUND);
+    }
+    BoardDTO boardDTO = new BoardDTO();
+    boardDTO.setBoardTitle(title);
+    boardDTO.setBoardContent(content);
+    boardDTO.setEmail(email);
+    try {
+        boardService.insertBoard(boardDTO, imgFiles, email);
+    } catch (Exception e) {
+        System.out.println("게시물을 저장하는 중 오류가 발생했습니다: " + e.getMessage());
+        return new ResponseEntity<>("게시물을 저장하는 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping("/list")
-    public String findAll(Model model){
-        List<BoardDTO> boardDTOList = boardService.findAll();
-        model.addAttribute("boardList",boardDTOList);
+    return new ResponseEntity<>("게시물이 성공적으로 저장되었습니다.", HttpStatus.OK);
+}
+
+
+
+    @GetMapping({"/list","/list/{requestData}"})
+    public  String boardList( @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "10") int size,
+                             @RequestParam(required = false) String type,
+                             @RequestParam(required = false) String keyword,
+                            Model model){
+        String search = "";
+        List<BoardNoticeDTO> noticeDTOs = boardNoticeService.getTopBoardNotice();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Board> boardPage = boardService.getBoardPage(pageable, type, keyword);
+
+        
+
+        if ("titleAndContent".equals(type)) {
+            search = "제목+내용";
+        } 
+        if ("title".equals(type)) {
+            search = "제목";
+        }
+        if ("content".equals(type)) {
+            search = "내용";
+        }
+        if ("writer".equals(type)) {
+            search = "작성자";
+        } 
+        model.addAttribute("noticeDTOs", noticeDTOs);
+        model.addAttribute("search", search);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("boardPage", boardPage);
         return "paging";
     }
-    @GetMapping("/{id}")
-    public String findById(@PathVariable Long id, Model model,
-                           @PageableDefault(page=1) Pageable pageable){
-        //해당 게시글의 조회수를 하나 올리고 게시글 데이터를 가져와서 출력
-        boardService.updateHits(id);
-        BoardDTO boardDTO = boardService.findById(id);
-        //댓글목록 가져오기//
-        List<CommentDTO> commentDTOList = commentService.findAll(id);
-        model.addAttribute("commentList",commentDTOList);
+    
 
-        model.addAttribute("board", boardDTO);
-        model.addAttribute("page", pageable.getPageNumber());
+    @GetMapping("/{id}")
+    public String oneBoard(@PathVariable("id") Long boardId, Model model,
+                            HttpServletRequest request, HttpServletResponse response){
+
+        System.out.println("하나조회 컨트롤러왔음");
+        
+        List<CommentDTO> commentDTOs = commentService.getBoardComment(boardId);
+        BoardDTO boardDTO = boardService.getOneBoard(boardId);
+
+
+
+             // Check if the board was visited
+        Cookie[] cookies = request.getCookies();
+        boolean visited = false;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                // Check if the visited cookie for the specific boardId exists
+                if (cookie.getName().equals("visited_" + boardId)) {
+                    visited = true;
+                    break;
+                }
+            }
+        }
+
+        // Increase view count if not visited
+        if (!visited) {
+            boardService.increaseViewCount(boardId);
+
+            // Set cookie to mark the board as visited
+            Cookie cookie = new Cookie("visited_" + boardId, "true");
+            cookie.setMaxAge(24 * 60 * 60); // 24 hours
+            cookie.setPath("/"); // Cookie is valid for the entire site
+            response.addCookie(cookie);
+        }
+
+        model.addAttribute("commentDTOs", commentDTOs);
+        model.addAttribute("boardDTO", boardDTO);
+
         return "detail";
     }
 
-    @GetMapping("/update/{id}")
-    public String updateForm(@PathVariable Long id, Model model){
-        BoardDTO boardDTO = boardService.findById(id);
-        model.addAttribute("boardUpdate", boardDTO);
+
+    @GetMapping("update/{boardid}")
+    public String boardUpdateForm(@PathVariable("boardid") Long boardId,Model model){
+
+        System.out.println("수정 페이지 이동");
+        BoardDTO boardDTO = boardService.getOneBoard(boardId);
+        model.addAttribute("boardDTO", boardDTO);
+
         return "update";
     }
 
-    @PostMapping("/update")
-    public String update(@ModelAttribute BoardDTO boardDTO, Model model) {
-        BoardDTO board = boardService.update(boardDTO);
-        model.addAttribute("board", board);
-        return "detail";
-//        return "redirect:/board/" + boardDTO.getId(); 조회수 오류때문에
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateBoard(@PathVariable Long id,
+                                              @ModelAttribute BoardDTO boardDTO,
+                                              @RequestParam("boardImgFile") List<MultipartFile> boardImgFile,
+                                              Principal principal) {
+        System.out.println("수정컨트롤러 도착" + boardDTO.toString());
+   // 파일의 사이즈를 출력
+        System.out.println("파일 사이즈: " + boardImgFile.get(0).getSize() + " bytes");
+        // 파일의 원본 이름을 출력
+        System.out.println("원본 파일 이름: " + boardImgFile.get(0).getOriginalFilename());
+        // 파일의 콘텐츠 타입을 출력
+        System.out.println("파일 콘텐츠 타입: " + boardImgFile.get(0).getContentType());
+        
+        // 파일의 저장 이름을 출력 (필요하다면)
+        System.out.println("파일 저장 이름: " + boardImgFile.get(0).getName());
+        // 존재 유무
+        System.out.println("비어있는 유무1"+boardImgFile.isEmpty());
+        System.out.println("비어있는 유무2"+boardImgFile.get(0).isEmpty());
+        String email = principal.getName();
+        Member member = memberRepository.findByMemberEmail(email);
+        if (member == null) {
+            return new ResponseEntity<>("데이터베이스에 없는 회원입니다.", HttpStatus.NOT_FOUND);
+        }
+        try {
+            System.out.println("수정컨트롤러 try");
+            boardService.boardUpdate(boardDTO, boardImgFile, email);
+        } catch (Exception e) {
+            return new ResponseEntity<>("게시물을 수정하는 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>("게시물이 성공적으로 수정되었습니다.", HttpStatus.OK);
     }
 
-    //삭제
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id){
-        boardService.delete(id);
-        return "redirect:/board/paging";
-    }
-    //페이지처리
-    @GetMapping("/paging")
-    public String paging(@PageableDefault(page = 1)Pageable pageable, Model model){
-        //   pageable.getPageNumber();
-        Page<BoardDTO> boardList = boardService.paging(pageable);
-        int blockLimit = 3;
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
-        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
 
-        // page 갯수 20개
-        // 현재 사용자가 3페이지
-        // 1 2 3
-        // 현재 사용자가 7페이지
-        // 7 8 9
-        // 보여지는 페이지 갯수 3개
-        // 총 페이지 갯수 8개
+    @DeleteMapping("/delete/{boardid}")
+    public ResponseEntity<String> boardDelete(@PathVariable("boardid") Long boardId,
+                              @RequestBody Map<String, String> requestData,Principal principal){
 
-        model.addAttribute("boardList", boardList);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        return "paging";
+        try {
+            System.out.println("삭제 컨트롤러왔씀");
+            System.out.println("삭제 boardId"+boardId);
+
+            String email = principal.getName();
+            boardService.boardDelete(boardId, email);
+        } catch (Exception e) {
+            // alert에서 뜨는 메세지는 서비스에서 구현
+            return new ResponseEntity<>("게시물을 수정하는 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>("게시물이 성공적으로 수정되었습니다.", HttpStatus.OK);
     }
+
+
+
 
 
 }
@@ -751,126 +915,240 @@ public class BoardController {
     <summary>코드 보기(Service)</summary>
 
 ```java
+package com.keduit.bird.service;
+
+import com.keduit.bird.constant.Role;
+import com.keduit.bird.dto.BoardDTO;
+import com.keduit.bird.entity.Board;
+import com.keduit.bird.entity.BoardImg;
+import com.keduit.bird.entity.BoardNotice;
+import com.keduit.bird.entity.Member;
+import com.keduit.bird.repository.BoardImgRepository;
+import com.keduit.bird.repository.BoardRepository;
+import com.keduit.bird.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final BoardFileRepository boardFileRepository;
-    private final MemberService memberService;
+    private final BoardImgService boardImgService;
+    private final MemberRepository memberRepository;
+    private final BoardImgRepository boardImgRepository;
 
-    public void save(BoardDTO boardDTO) throws IOException {
-        //파일 첨부 여부에 따라서 로직을 분리
-        if (boardDTO.getBoardFile().isEmpty()) {
-            //첨부 파일 없음.
-            String memberName = getMemberNameFromAuthentication();
-            BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDTO, memberName);
-            boardRepository.save(boardEntity);
-        } else {
-            //첨부파일 있음.
-            // 첨부 파일 있음.
-            /*
-                1. DTO에 담긴 파일을 꺼냄
-                2. 파일의 이름 가져옴
-                3. 서버 저장용 이름을 만듦
-                // 내사진.jpg => 839798375892_내사진.jpg
-                4. 저장 경로 설정
-                5. 해당 경로에 파일 저장
-                6. board_table에 해당 데이터 save 처리
-                7. board_file_table에 해당 데이터 save 처리
-             */
-            String memberName = getMemberNameFromAuthentication();
-            BoardEntity boardEntity = BoardEntity.toSaveFileEntity(boardDTO, memberName);
-            Long savedId = boardRepository.save(boardEntity).getId();
-            BoardEntity board = boardRepository.findById(savedId).get();
-            for (MultipartFile boardFile : boardDTO.getBoardFile()) {
-//                MultipartFile boardFile = boardDTO.getBoardFile(); // 1.다중파일일경우 필요없는 부분
-                String originalFilename = boardFile.getOriginalFilename(); // 2.
-                String storedFileName = originalFilename; // 3.
-                String savePath = "C:/pj/members/" + storedFileName; // 4. 윈도우경로는 C:/springboot_img/ 그리고 9802398403948_내사진.jpg
-                boardFile.transferTo(new File(savePath)); // 5.
+    public Long insertBoard(BoardDTO boardDTO, List<MultipartFile> boardImgFileList,String email) throws Exception {
+  
+        Member member = memberRepository.findByMemberEmail(email);
 
-                BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName);
-                boardFileRepository.save(boardFileEntity);
-            }
+//      컨트롤러에서 확인했지만 한번더 확인
+        if(member == null){
+            throw new UsernameNotFoundException("해당하는 이메일(" + email + ")을 찾을 수 없습니다.");
         }
+        if(member.getRole().equals(Role.STOP)){
+          throw new IllegalStateException("해당하는 이메일(" + email + ")을 정지된 회원입니다.");
+        }
+        Board board = new Board();
+        board.setBoardContent(boardDTO.getBoardContent());
+        board.setBoardTitle(boardDTO.getBoardTitle());
+        board.setMember(member);
+        boardRepository.save(board);
+        for (int i = 0; i < boardImgFileList.size(); i++) {
+            BoardImg BoardImg = new BoardImg();
+            BoardImg.setBoard(board);
+            boardImgService.saveCommunityImg(BoardImg, boardImgFileList.get(i));
+        }
+        return board.getId();
     }
 
-    @Transactional
-    public List<BoardDTO> findAll() {
-        List<BoardEntity> boardEntityList = boardRepository.findAll();
+
+    public List<BoardDTO> getBoardList(){
+        List<Board> boardList = boardRepository.findAll();
+
+
         List<BoardDTO> boardDTOList = new ArrayList<>();
-        for (BoardEntity boardEntity : boardEntityList) {
-            boardDTOList.add(BoardDTO.toBoardDTO(boardEntity));
+        for (Board board : boardList) {
+            BoardDTO boardDTO = new BoardDTO();
+            boardDTO.setId(board.getId());
+            boardDTO.setNickName(board.getMember().getMemberName());
+            boardDTO.setBoardTitle(board.getBoardTitle());
+            boardDTO.setBoardContent(board.getBoardContent());
+            boardDTO.setCount(board.getCount());
+            boardDTOList.add(boardDTO);
         }
         return boardDTOList;
     }
 
-    @Transactional
-    public void updateHits(Long id) {
-        boardRepository.updateHits(id);
-    }
 
-    @Transactional
-    public BoardDTO findById(Long id) {
-        Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(id);
-        if (optionalBoardEntity.isPresent()) {
-            BoardEntity boardEntity = optionalBoardEntity.get();
-            BoardDTO boardDTO = BoardDTO.toBoardDTO(boardEntity);
-            return boardDTO;
-        } else {
-            return null;
-        }
-    }
 
-    public BoardDTO update(BoardDTO boardDTO) {
-        String memberName = getMemberNameFromAuthentication();
-        BoardEntity boardEntity = BoardEntity.toUpdateEntity(boardDTO, memberName);
-        boardRepository.save(boardEntity);
 
-        return findById(boardDTO.getId());
-    }
-
-    public void delete(Long id) {
-        boardRepository.deleteById(id);
-    }
-
-    public Page<BoardDTO> paging(Pageable pageable) {
-        int page = pageable.getPageNumber() - 1; //page 위치에 있는 값은 0부터 시작
-        int pageLimit = 3; //한페이지에 보여줄 글 개수
-        Page<BoardEntity> boardEntities =
-                boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-
-        System.out.println("boardEntities.getContent() = " + boardEntities.getContent()); // 요청 페이지에 해당하는 글
-        System.out.println("boardEntities.getTotalElements() = " + boardEntities.getTotalElements()); // 전체 글갯수
-        System.out.println("boardEntities.getNumber() = " + boardEntities.getNumber()); // DB로 요청한 페이지 번호
-        System.out.println("boardEntities.getTotalPages() = " + boardEntities.getTotalPages()); // 전체 페이지 갯수
-        System.out.println("boardEntities.getSize() = " + boardEntities.getSize()); // 한 페이지에 보여지는 글 갯수
-        System.out.println("boardEntities.hasPrevious() = " + boardEntities.hasPrevious()); // 이전 페이지 존재 여부
-        System.out.println("boardEntities.isFirst() = " + boardEntities.isFirst()); // 첫 페이지 여부
-        System.out.println("boardEntities.isLast() = " + boardEntities.isLast()); // 마지막 페이지 여부
-
-        // 목록: id, writer, title, hits, createdTime + 작성자: memberEmail
-        Page<BoardDTO> boardDTOS = boardEntities.map(board -> new BoardDTO(board.getId(), board.getAdminBoardId(),
-                board.getBoardTitle(), board.getBoardHits(), board.getBoardCreatedTime()));
-        return boardDTOS;
-    }
-
-    // Authentication 객체를 사용하여 현재 사용자의 이름을 가져오는 메서드(게시판 작성자)
-    public String getMemberNameFromAuthentication() {
-        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        String memberName = memberService.findMemberNameByMemberEmail(memberEmail);
-        return memberName;
-    }
-    //작성자 컬럼 찾아오기.
-    public List<BoardDTO> findByAdminBoardId(String adminBoardId){
-        List<BoardEntity> boardEntityList = boardRepository.findByAdminBoardId(adminBoardId);
-        List<BoardDTO> boardDTOList = new ArrayList<>();
-        for (BoardEntity boardEntity : boardEntityList) {
-            boardDTOList.add(BoardDTO.toBoardDTO(boardEntity));
-        }
-        return boardDTOList;
+public Page<Board> getBoardPage(Pageable pageable, String type, String keyword) {
+    System.out.println("서비스 코드 도착");
+    System.out.println("keyword"+keyword);
+    
+    if ("titleAndContent".equals(type)) {
+        System.out.println("첫번째 문");
+        return boardRepository.findFilterBoard(keyword, pageable);
+    } else if ("title".equals(type)) {
+        System.out.println("2번째 문");
+        return boardRepository.findByBoardTitleContaining(keyword, pageable);
+    } else if ("content".equals(type)) {
+        System.out.println("3번째 문");
+        return boardRepository.findByBoardContentContaining(keyword, pageable);
+    } else if ("writer".equals(type)) {
+        System.out.println("4번째 문");
+        return boardRepository.findByMemberNameContaining(keyword, pageable);
+    } else {
+        System.out.println("마지막");
+        return boardRepository.findAll(pageable);
     }
 }
+
+
+public BoardDTO getOneBoard(Long boardId) {
+
+    BoardDTO boardDTO = new BoardDTO();
+    // 게시글 찾기
+    Board board = boardRepository.findById(boardId).orElse(null);
+
+    // 이미지 찾기
+    BoardImg boardImg = boardImgRepository.findByBoardId(boardId);
+
+    // 게시글 내용이 있다면
+    if (board != null) {
+        boardDTO.setId(boardId);
+        boardDTO.setEmail(board.getMember().getMemberEmail());
+        boardDTO.setBoardTitle(board.getBoardTitle());
+        boardDTO.setBoardContent(board.getBoardContent());
+        boardDTO.setNickName(board.getMember().getMemberName()); 
+        boardDTO.setRegTime(board.getBoardCreatedTime());
+        boardDTO.setUpdateTime(board.getBoardUpDatedTime());
+        boardDTO.setCount(board.getCount());
+
+        if(boardImg !=null){
+            if (!boardImg.getImgName().equals("")) {
+                boardDTO.setFileName(boardImg.getImgName());
+                boardDTO.setImgUrl(boardImg.getImgUrl());
+                boardDTO.setOriImgName(boardImg.getOriImgName());
+            }
+        }
+    // 게시글이 없다면
+    } else {
+        throw new RuntimeException("게시물을 찾지 못하였습니다. " + boardId);
+    }
+    return boardDTO;
+}
+
+
+
+public void boardUpdate(BoardDTO boardDTO, List<MultipartFile> boardImgFileList, String email) throws Exception {
+    System.out.println("서비스 업데이트 도착");
+    System.out.println("서비스 업데이트 boardDTO" + boardDTO.toString());
+    System.out.println("서비스 업데이트 boardImgFileList++++" + boardImgFileList.isEmpty());
+    Member member = memberRepository.findByMemberEmail(email);
+    Board board = boardRepository.findById(boardDTO.getId()).orElse(null);
+    BoardImg boardImg = boardImgRepository.findByBoardId(board.getId());
+
+    if (member == null) {
+        throw new UsernameNotFoundException("회원가입을 해주시기 바랍니다");
+    }
+    if (board == null) {
+        throw new IllegalArgumentException("게시글을 찾을 수 없습니다");
+    }
+    // 작성자와 수정자 비교, 관리자라면 수정 가능
+    if (!board.getMember().getMemberEmail().equals(email) && member.getRole() != Role.ADMIN) {
+        throw new SecurityException("해당 게시글을 수정할 권한이 없습니다.");
+    }
+
+    // 이미지 삭제 로직
+    if (boardDTO.isDeleteImg()) {
+        System.out.println("이미지 삭제 조건문");
+        boardImgRepository.delete(boardImg);
+    } 
+    // 하나의 이미지만 받아서 첫번쨰 자리로 해결  boardImgFileList.isEmty() 파일 존재 자체 유무를 판단한다고함.
+    else if (!boardImgFileList.get(0).isEmpty()) {
+        System.out.println("이미지 파일 리스트가 비어 있지 않음");
+        // 기존 이미지 삭제 및 새로운 이미지 저장
+        if (boardImg != null) {
+            System.out.println("기존 이미지 삭제");
+            boardImgRepository.delete(boardImg);
+        }
+        for (int i = 0; i < boardImgFileList.size(); i++) {
+            BoardImg BoardImg = new BoardImg();
+            BoardImg.setBoard(board);
+            boardImgService.saveCommunityImg(BoardImg, boardImgFileList.get(i));
+        }
+    }
+
+    // 게시글 정보를 업데이트
+    board.setMember(member);
+    board.setBoardTitle(boardDTO.getBoardTitle());
+    board.setBoardContent(boardDTO.getBoardContent());
+    boardRepository.save(board);
+}
+
+
+
+
+public void boardDelete(Long boardId, String email) {
+    System.out.println("삭제");
+    // boardId와 email로 보드를 찾습니다.
+    Board board = boardRepository.findById(boardId).orElse(null);
+    Member member = memberRepository.findByMemberEmail(email);
+    BoardImg boardImg = boardImgRepository.findByBoardId(boardId);
+    if (member == null) {
+        throw new UsernameNotFoundException("회원가입을 해주시기 바랍니다");
+    }
+    if (board == null) {
+        throw new IllegalArgumentException("게시글을 찾을 수 없습니다");
+    }
+       // 작성자와 수정자 비교, 관리자라면 수정 가능
+    if (!board.getMember().getMemberEmail().equals(email) && member.getRole() != Role.ADMIN) {
+        throw new SecurityException("해당 게시글을 수정할 권한이 없습니다.");
+    }
+    /// 게시글 삭제
+    boardRepository.delete(board);
+
+    if(boardImg != null){
+        boardImgRepository.delete(boardImg);
+    }
+    // 이미지삭제
+
+}
+
+
+
+    public Board increaseViewCount(Long boardId) {
+
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        // 조회수를 1 증가시킵니다.
+        board.setCount(board.getCount() + 1);
+
+        // 증가된 조회수를 저장하고 업데이트된 BoardCommunity 객체를 반환합니다.
+        return boardRepository.save(board);
+    }
+
+//내가 쓴 글 찾기(mpage 기능)
+    public List<Board> getBoardsByCurrentMember(String memberName) {
+        return boardRepository.findByMemberName(memberName);
+    }
+
+}
+
+
 
 ```
 </details>
@@ -1872,8 +2150,7 @@ public class BirdListService {
 아쉽습니다. 이후 부족하거나, 제대로 기능되지 못 한 부분들을 보완하여 저희 팀의 결과물을 완성하고 싶습니다.
 <br>
 ## 김기윤(팀원)
-처음으로 팀 프로젝트를  경험해 봤는데, 그동안 부족했던 점과 알아야할 점에 대해 깨달은 시간이었습니다. <br>
-구현하고 싶었던 부분을 전부 구현하지 못해서 아쉽고, 제대로 기능을 하는 부분에 대해서는 성취감도 느꼈습니다. <br> 
-특히 **Thymeleaf 와 CRUD 작업에 대해 어떤 방식으로 데이터가 흘러가는지에** 대해 알게 되었습니다. <br>
-평소 좋아했던 새를 주제로 프로젝트를 하게 되어서 좋았고, 팀원들의 도움을 많이 받아서 만든 프로젝트인 만큼 <br>
-기회가 된다면 조금 더 발전한 후에 혼자서 해당 프로젝트를 다시 한 번 도전해 보고 싶습니다. <br>
+이전 프로젝트에서 Rest방식의 기초를 학습하여, 이번 프로젝트에서 보다 깔끔한 코드를 만들 수 있었던거 같습니다. <br>
+색기능에서 Rest방식을 써보고 싶었지만, 데이터를 받아서 동시에 페이지 처리는 하지 못하여, 아쉬웠습니다. <br> 
+다음에는 검색기능부분을 보완하여, 보다 완성도 높은 RestFul 방식의 홈페이지를 만들고 싶습니다. <br>
+
