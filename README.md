@@ -103,7 +103,7 @@
     * 멸종 위기종 **1급, 2급** 별 분류
     * 새의 사진과 이름, 간략한 설명글 구성
 
-  ## <img src="https://github.com/koyuhjkl123/Project_Bridy/assets/94844952/7418d06b-b9aa-41ce-8c4a-d551302da9b6" width="40" height="40"/>김기윤(팀원)
+  ## <img src='https://ifh.cc/g/BX1AXr.jpg' width="40" height="40"/>김기윤(팀원)
   * 담당 역할
     * 커뮤니티 게시판
       * 게시글, 댓글 CRUD 구현
