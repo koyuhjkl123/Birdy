@@ -1,5 +1,6 @@
 
 $(document).ready(function () {
+    adjustTextareaHeight(); // 페이지 로드 시 높이 설정
     $("#commentWrite").submit(function (event) {
         // 새로고침 방지
         event.preventDefault();
@@ -133,3 +134,9 @@ $(document).ready(function () {
 
 
 });
+
+function adjustTextareaHeight() {
+    const textarea = $('#boardContent')[0];
+    textarea.style.height = 'auto'; // 기본 높이로 설정
+    textarea.style.height = textarea.scrollHeight + 'px'; // 스크롤 높이로 설정
+}
