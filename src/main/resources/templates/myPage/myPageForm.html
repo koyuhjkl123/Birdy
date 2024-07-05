@@ -6,22 +6,30 @@
 <th:block layout:fragment="css">
     <style th:inline="css">
         .content{
-        text-align:center;
         margin:5% 10%;
+        }
+        .choice{
+        text-align: center;
         }
         .content-body{
             border: 1px solid;
             border-radius:20px;
-            width: 75%;
+            width: 85%;
             margin: 0 auto;
-            padding: 10px;
+            padding: 30px 50px;
+            background-color:rgb(220,220,220);
         }
         .form-group img{
         border: 2px solid gray;
         border-radius:50%;
+        width: 200px;
         }
         .form-group p{
         color:black;
+        margin:0;
+        }
+        .row{
+        text-align:center;
         }
     </style>
 </th:block>
@@ -39,7 +47,7 @@
 
 <!-- 마이페이지 -->
 <div layout:fragment="content">
-    <p>
+    <p class="choice">
         <a th:href="@{/myPage/myPage_main}" class="btn btn-secondary me-2">My Main</a>
         <a th:href="@{/myPage/boardList}" class="btn btn-primary me-2">My List</a>
         <a th:href="@{/myPage/commentList}" class="btn btn-primary me-2">My Comment</a>
@@ -48,34 +56,39 @@
         <div class="row">
             <div class="col-12">
                 <div class="form-group">
-                    <img th:src="@{'/myPage/profile/' + ${member.memberEmail}}" style="max-width: 200px;" alt="프로필 이미지"/>
+                    <img th:src="@{'/myPage/profile/' + ${member.memberEmail}}" alt="프로필 이미지"/>
                 </div>
             </div>
         </div>
-
-        <div class="row">
+<br>
+        <br>
+        <div class="row2">
             <div class="col-6">
                 <div class="form-group">
-                    <p>회원번호 : <span th:text="${member.id}"></span></p>
+                    <p><b>회원번호 : </b><span th:text="${member.id}"></span></p>
                 </div>
             </div>
+            <br>
             <div class="col-6">
                 <div class="form-group">
-                    <p>이름 : <span th:text="${member.memberName}"></span></p>
+                    <p><b>이름 : </b><span th:text="${member.memberName}"></span></p>
                 </div>
             </div>
+            <br>
             <div class="col-6">
                 <div class="form-group">
-                    <p>이메일 : <span th:text="${member.memberEmail}"></span></p>
+                    <p><b>이메일 : </b><span th:text="${member.memberEmail}"></span></p>
                 </div>
             </div>
+            <br>
             <div class="col-6">
                 <div class="form-group">
-                    <p>연락처 : <span th:text="${member.memberPhone}"></span></p>
+                    <p><b>연락처 : </b><span th:text="${member.memberPhone}"></span></p>
                 </div>
             </div>
         </div>
-
+<br>
+        <br>
         <div class="row">
             <div class="col-12">
                 <a th:href="@{update}" class="btn btn-secondary me-2">수정하기</a>
