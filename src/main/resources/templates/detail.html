@@ -32,12 +32,21 @@
             <div class="col" id="count">조회수 <span th:text="${boardDTO.count}"></span></div>
         </div>
         <div class="row">
-            <div class="col" th:if="${boardDTO.fileName != null}">
+            <!-- <div id="img-postion" class="col" th:if="${boardDTO.fileName != null}"
+            th:style="|background-image: url('/images/${boardDTO.fileName}');|">
+
                 <img th:src="@{|/images/${boardDTO.fileName}|}">
-            </div>
+            </div> -->
         </div>
         <div class="row">
-            <div class="col" th:text="${boardDTO.boardContent}">내용</div>
+            <div class="col" id="board-content" >
+            <div id="img-postion" th:if="${boardDTO.fileName != null}"
+            th:style="|background-image: url('/images/${boardDTO.fileName}');|">
+
+                <!-- <img th:src="@{|/images/${boardDTO.fileName}|}"> -->
+            </div>
+                <span th:text="${boardDTO.boardContent}"></span>
+            </div>
         </div>
     </div>
 

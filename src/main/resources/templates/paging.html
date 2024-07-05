@@ -52,7 +52,7 @@
                     <tr th:each="noticeDTO : ${noticeDTOs}">
                         <td th:text="${noticeDTO.id}" class="notice"></td>
                         <td class="notice">
-                            <a th:href="@{/noticeDTO/{id}(id=${noticeDTO.id})}" th:text="${noticeDTO.boardTitle}"></a>
+                            <a th:href="@{/notice/{id}(id=${noticeDTO.id})}" th:text="${noticeDTO.boardTitle}"></a>
                         </td>
                         <td th:text="${noticeDTO.nickName}" class="notice"></td>
                         <td th:text="${#temporals.format(noticeDTO.regTime, 'yyyy-MM-dd HH:mm:ss')}" class="notice"></td>
