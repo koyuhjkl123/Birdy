@@ -17,7 +17,11 @@
         border-radius:50%;
         box-shadow:0 0 10px rgb(52,97,86);
         }
-
+		.icon img{
+            border-radius:50%;
+            width:50px;
+            height:50px;
+		}
 	</style>
 	<title>About Us</title>
 </head>
@@ -59,44 +63,48 @@
 						<div class="col-6 col-md-6">
 							<div class="feature">
 								<div class="icon">
+									<img src="/images/m_16.jpg" alt="">
 								</div>
 								<h3>Bird List</h3>
 								<p>우리나라에서 볼 수 있는 텃새, 철새를 볼 수 있고,<br>
 									멸종 위기의 보호가 필요한 희귀종 새들도 1급과 2급으로 나누어 볼 수 있는 공간입니다.</p>
-								<a href="@{bird/birds}">보러가기</a>
+								<a th:href="@{/bird/birds}">보러가기</a>
 							</div>
 						</div>
 
 						<div class="col-6 col-md-6">
 							<div class="feature">
 								<div class="icon">
+									<img src="/images/m_17.jpg" alt="">
 								</div>
 								<h3>탐조</h3>
 								<p>새를 관찰하고, 알아가는 탐조에 대하여 알아가고,
 									우리 주변에서 가장 간단히 탐조를 해 볼 수 있는 탐조대의 위치를 지도로 확인 할 수 있는 공간입니다.</p>
-								<a href="@{bird/birdy}">보러가기</a>
+								<a th:href="@{/bird/birdy}">보러가기</a>
 							</div>
 						</div>
 
 						<div class="col-6 col-md-6">
 							<div class="feature">
 								<div class="icon">
+									<img src="/images/con_2.jpg" alt="">
 								</div>
 								<h3>통계</h3>
 								<p>해마다, 지역별로 어떤 새들이 살아가는 지.<br>
 									그 통계를 데이터표와 그래프의 형태로 확인해 볼 수 있는 공간입니다.</p>
-								<a href="@{/}">보러가기</a>
+								<a th:href="@{/}">보러가기</a>
 							</div>
 						</div>
 
 						<div class="col-6 col-md-6">
 							<div class="feature">
 								<div class="icon">
+									<img src="/images/m_12.jpg" alt="">
 								</div>
 								<h3>뉴스 & 과학</h3>
 								<p>새와 관련되어 뉴스 기사나, 과학 기사 등등...<br>
 									새를 주제로 한 흥미로운 여러 기삿거리들을 한 눈에 모아 볼 수 있는 공간입니다.</p>
-								<a href="@{members/news}">보러가기</a>
+								<a th:href="@{/members/news}">보러가기</a>
 							</div>
 						</div>
 
@@ -121,49 +129,52 @@
 					<img src="/images/jinsu.png" class="img-fluid mb-5">
 					<h3>Kim Jinsu</h3>
 					<span class="d-block position mb-4">Team One 의 팀장</span>
-					<p>Team One을 이끌고, 프로젝트의 스케줄과 진행사항을 총괄적으로 관리하는 팀장입니다.<br>
-						지역별 새의 개체수 통계 자료를 엑셀형식으로 가져와 정리하고,
-						데이터에 따른 그래프를 생성하여 통계를 내는 기능을 담당하였습니다.<br>
-						팀원들이 각기 구성한 코드들을 취합하여 하나의 사이트로 완성시키는 최종 통합 역할을 맡았습니다.
+					<p>Team One의 팀장.<br>
+						지역별 새의 개체수 통계 자료를 엑셀형식으로 가져와 정리하고, 데이터에 따른 그래프 표 생성.<br>
+						팀원들이 각기 구성한 코드들을 취합하여 정리하고, 하나의 사이트로 완성시키는 최종 정리 & 통합 담당.
 					</p>
 				</div>
 				<!-- End Column 1 -->
 
 				<!-- Start Column 2 -->
 				<div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
-					<img src="/images/sejin.png" class="img-fluid mb-5">
+					<img src="/images/hi1.gif" class="img-fluid mb-5">
 					<h3>Lee Sejin</h3>
 					<span class="d-block position mb-4">Team One 의 팀원</span>
-					<p>Team One의 일원으로, 웹 페이지의 필요 데이터를 크롤링하여 필요 페이지(새의 종류)에 나열하고,
-						이메일 인증을 통한 회원가입과 로그인, 소셜(구글, 네이버, 카카오)로그인, 비밀번호 변경, 회원 정보 수정, 마이페이지 등.<br>
-						회원들을 위한 기능 구현을 담당하였습니다.<br>
-						사이트와 팀원들의 소개도 맡고 있습니다.
+					<p>Team One의 일원.<br>
+						웹 페이지에서 데이터를 크롤링하여 화면에 나열하고,
+						이메일 인증을 통한 회원가입과 로그인, 소셜(구글, 네이버, 카카오) 로그인,
+						비밀번호 변경, 회원 정보 수정, 마이페이지 등.<br>
+						사용자들을 위한 기능 구현을 담당.<br>
+						About us 페이지 구성 담당.
 					</p>
 				</div>
 				<!-- End Column 2 -->
+
+				<div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
+					<img src='https://ifh.cc/g/BX1AXr.jpg' width="40" height="40"/>
+<!--					<img src="/images/kiyoon.jpg" class="img-fluid mb-5">-->
+					<h3>Kim kiyoon</h3>
+					<span class="d-block position mb-4">Team One 의 팀원</span>
+					<p> Team One의 일원<br>
+						게시판과 공지사항 페이지 담당.<br>
+						게시글의 작성과 수정, 삭제 등의 기능과 댓글 기능을 구현하고,
+						공지사항을 게시글 목록의 상단에 고정하여 보여주는 기능을 구현.
+					</p>
+				</div>
 
 				<!-- 3 -->
 				<div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
 					<img src="/images/teari.png" class="img-fluid mb-5">
 					<h3>Kim Taeri</h3>
 					<span class="d-block position mb-4">Team One 의 팀원</span>
-					<p>Team One의 일원으로, 새에 관련한 뉴스 기사나 관련된 흥미로운 주제들을 크롤링해와 보여주고,
-						탐조에 대한 페이지에서 인공위성 지도를 띄우고, 그 위에 위치핀으로 전국의 탐조대 위치를 표시하였으며,
-						철새들의 이동경로를 알 수 있는 API 데이터 페이지를 담당하였습니다.<br>
-						팀원들의 사진을 대신할 3D 캐릭터를 제작하여 제공하였습니다.
+					<p>Team One의 일원<br>
+						새에 관련한 뉴스 기사나 관련된 정보를 크롤링해와 화면에 띄우고,
+						탐조에 대한 페이지에서 지도 API를 이용하여 위치핀으로 전국의 탐조대 위치를 표시함.<br>
+						철새들의 이동경로를 알 수 있는 API 데이터 페이지를 담당.
 					</p>
 				</div>
 
-				<div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
-					<img src='https://ifh.cc/g/BX1AXr.jpg' width="40" height="40"/>
-<!--					<img src="/images/kiyoon.jpg" class="img-fluid mb-5">-->
-					<h3>Kim kiyoon</h3>
-					<span class="d-block position mb-4">김기윤(팀원)</span>
-					<p> 게시판과 공지사항 항목을 담당하였습니다.<br>
-						게시글의 작성과 수정, 삭제 등의 기능과 댓글 기능을 구현하고, 공지사항을 게시글 목록의 상단에 고정하여 보여주는 기능을
-						구현하였습니다.
-					</p>
-				</div>
 			</div>
 		</div>
 	</div>
