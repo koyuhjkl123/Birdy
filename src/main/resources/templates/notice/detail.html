@@ -15,32 +15,40 @@
 <div layout:fragment="content">
     <div class="container">
         <div id="detail">
-            <div class="row">
-                <div class="col-8">
-                    <div class="row">
-                        <div class="col">
-                            <span th:text="${boardDTO.boardTitle}">제목</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span th:text="${boardDTO.nickName}">작성자</span>
-                            <span th:text="*{#temporals.format(boardDTO.regTime, 'yyyy-MM-dd HH:mm:ss')}">등록일자</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col" id="count">조회수 <span th:text="${boardDTO.count}"></span></div>
-            </div>
-            <div class="row">
-                <div class="col" th:if="${boardDTO.fileName != null}">
-                    <img th:src="@{|/images/${boardDTO.fileName}|}">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col" th:text="${boardDTO.boardContent}">내용</div>
-            </div>
+            <table  class="table table-bordered">
+                <thead>
+                   <tr>
+                      <th scope="col" colspan="4"  th:text="${boardDTO.boardTitle}">게시글 제목</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   <tr>
+                      <th scope="col">작성자</th>
+                      <td th:text="${boardDTO.nickName}">작성자 닉네임</td>
+                      <th scope="col">조회수</th>
+                      <td th:text="${boardDTO.count}">1234</td>
+                   </tr>
+                   <tr>
+                    <th>등록일자</th>
+                    <td colspan="4" th:text="*{#temporals.format(boardDTO.regTime, 'yyyy-MM-dd HH:mm:ss')}">등록일자</td>
+                 </tr>
+                   <tr>
+                      <td colspan="4">
+                        <div class="col"  >
+                            <div id="img-postion" th:if="${boardDTO.fileName != null}"
+                            th:style="|background-image: url('/images/${boardDTO.fileName}');|">
+                            </div>
+                            <textarea th:text="${boardDTO.boardContent}" class="board-content" id="boardContent" readonly></textarea>
+                         
+                      </td>
+                   </tr>
+            
+                </tbody>
+             </table>
         </div>
 
+
+        
         <div class="button-container">
             <a href="/notice/list" class="btn btn-primary">목록</a>
             <!-- 관리자 조건일때 보이는 조건  -->
